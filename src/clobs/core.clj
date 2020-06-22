@@ -1,7 +1,7 @@
 (ns clobs.core
   (:require [ring.adapter.jetty               :refer [run-jetty]]
             [clojure.pprint                   :refer [pprint]]
-            [compojure.core                   :refer [routes GET POST]]
+            [compojure.core                   :refer [routes GET POST PUT DELETE]]
             [compojure.route                  :refer [not-found]]
             [ring.middleware.json             :refer [wrap-json-response wrap-json-body]]
             [ring.util.response               :refer [response]]
@@ -15,15 +15,21 @@
     (GET "/clobs/recent-bookmarks"    []              (response index/recent)) ;;last 10 bookmarks added
     
     ;;user bookmarks
-    (GET "/clobs/user"                []              (response {})) ;;index page (all user bookmarks)
-    (POST "/clobs/user" {:keys [body]}         ;(response (with-out-str (clojure.pprint/pprint request))))              ;;create a new bookmark
+    (GET "/clobs/user"                []              (response user/get-all)) ;;index page (all user bookmarks)
+    (GET "/clobs/user/:id"            [id]            (response (user/get (Integer/parseInt id)))) ;;bookmark by id
+
+    (POST "/clobs/user" {:keys [body]}      ;;create a new bookmark
       (let [{:keys [url name]} body]
         (response (user/insert url name))))
-    ;(UPDATE "/clobs/user"             [id url name]   (response {})) ;;update an existing bookmark
-    ;(DELETE "/clobs/user"             [id]            (response {})) ;;delete an existing bookmark
+    
+    (PUT "/clobs/user" {:keys [body]}       ;;update an existing bookmark
+      (let [{:keys [url name id]} body]
+        (response (user/update url name id))))
+       
+    (DELETE "/clobs/user/:id" [id]          ;;delete an existing bookmark
+      (response (user/delete id))) 
 
     ;;from tutorial
-    (GET "/clobs/user/:id"             [id]            (response (user/get (Integer/parseInt id))))
     (POST "/debug"                    request         (response (with-out-str (clojure.pprint/pprint request))))
     
     (not-found {:error "Not found"})))

@@ -8,5 +8,15 @@
     (bookmarks-data/insert url name))
 
 (defn get
+    [id] (bookmarks-data/get-bookmark id))
+
+(def get-all
+    bookmarks-data/get-all)
+
+(defn update
+    [url name id]
+    (bookmarks-data/update url name id))
+
+(defn delete
     [id]
-    (bookmarks-data/get-bookmark id))
+    (bookmarks-data/delete id))

@@ -9,6 +9,7 @@
 (def db {:dbtype "mysql" :user "matheus" :password "matheus" :dbname "clobs"})
 (def ds (jdbc/get-datasource db))
 
+;(comment dummy bookmarks for testing
 (def bookmarks
     (list
         {
@@ -36,16 +37,26 @@
             :name "clojure lists"
             :url "https://clojuredocs.org/clojure.core/list"
         }))
+;)
 
 (defn get-bookmark
     [id]
     (sql/get-by-id ds :bookmark id))
 
+(def get-all
+    (sql/query ds ["select * from bookmark"]))
+
 (defn insert
     [url name]
     (sql/insert! ds :bookmark {:url url :name name}))
 
+(defn update
+    [url name id]
+    (sql/update! ds :bookmark {:url url :name name} {:id id}))
 
+(defn delete
+    [id]
+    (sql/delete! ds :bookmark {:id id} ))
 
 (def top-bookmarks
     bookmarks)
