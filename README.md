@@ -9,6 +9,7 @@ My intention is for this to have the same features as my other Bookmarks project
 It uses:
 * Ring/Jetty for web server
 * Compojure for routing
+* Ring session middleware for session management
 * next-jdbc for database connection
 * MySql as database
 * Leiningen for project creation & dependencies management

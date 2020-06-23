@@ -2,12 +2,12 @@
     (:require [clojure.pprint       :refer [pprint]]
               [next.jdbc            :as jdbc]
               [next.jdbc.sql        :as sql]
-              [next.jdbc.connection :as connection]))
+              [next.jdbc.connection :as connection]
+              [clobs.data.database  :refer [ds]]))
 
 ;; This file will be used for data retrieving
 
-(def db {:dbtype "mysql" :user "matheus" :password "matheus" :dbname "clobs"})
-(def ds (jdbc/get-datasource db))
+
 
 ;(comment dummy bookmarks for testing
 (def bookmarks

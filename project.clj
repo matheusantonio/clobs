@@ -8,6 +8,8 @@
                  [compojure "1.6.1"]
                  [ring/ring-json "0.5.0"]
                  [seancorfield/next.jdbc "1.0.462"]
-                 [mysql/mysql-connector-java "5.1.18"]]
+                 [mysql/mysql-connector-java "5.1.18"]
+                 [buddy/buddy-auth "2.2.0"]
+                 [buddy/buddy-hashers "1.4.0"]]
   :repl-options {:init-ns clobs.core}
   :main clobs.core)

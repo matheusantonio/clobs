@@ -4,9 +4,12 @@
             [compojure.core                   :refer [routes GET POST PUT DELETE]]
             [compojure.route                  :refer [not-found]]
             [ring.middleware.json             :refer [wrap-json-response wrap-json-body]]
+            [ring.middleware.session          :as session]
             [ring.util.response               :refer [response]]
             [clobs.blueprints.index_bookmarks :as index]
-            [clobs.blueprints.user_bookmarks  :as user]))
+            [clobs.blueprints.user_bookmarks  :as user]
+            [clobs.data.users                 :refer [password-matches?]]
+            [clobs.auth                       :as auth]))
 
 (def my-routes
   (routes
@@ -29,6 +32,23 @@
     (DELETE "/clobs/user/:id" [id]          ;;delete an existing bookmark
       (response (user/delete id))) 
 
+    (POST "/login" request
+      (let [session (:session request)
+            username (get-in request [:body :username])
+            password (get-in request [:body :password])]
+        (if (password-matches? username password)
+          (let [new-session (assoc session :username username)]
+            (-> (response "Logged in session!")
+                (assoc :session new-session)))
+          (response {:error "Não autorizado!"}))))
+
+    (GET "/logged" {:keys [session]}
+        (response
+          (if session
+            (let [username (:username session)]
+              {:status 200 :message username})
+            {:status 401 :message "Não está autorizado!"})))
+
     ;;from tutorial
     (POST "/debug"                    request         (response (with-out-str (clojure.pprint/pprint request))))
     
@@ -36,6 +56,7 @@
 
 (def app
   (-> my-routes
+      session/wrap-session
       (wrap-json-body {:keywords? true})
       wrap-json-response ))
 
