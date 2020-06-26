@@ -9,7 +9,7 @@
             [clobs.blueprints.index           :as     index]
             [clobs.blueprints.bookmarks       :as     bookmarks]
             [clobs.blueprints.auth            :as     auth]
-            [clobs.auth                       :refer [login-required]]))
+            [clobs.auth                       :refer [login-required response-messages]]))
 
 (def my-routes
   (routes
@@ -18,30 +18,24 @@
       ;;home page
       (GET "/top-bookmarks"       []              (response index/top)) ;;top 10 bookmarks
       (GET "/recent-bookmarks"    []              (response index/recent)) ;;last 10 bookmarks added
-      
 
       ;;user bookmarks
       (context "/bookmarks" []
         
-        (GET "/"               []              (response bookmarks/get-all)) ;;index page (all user bookmarks)
-        (GET "/:id"            [id]            (response (bookmarks/get (Integer/parseInt id)))) ;;bookmark by id
+        (GET "/"               request            (login-required request bookmarks/get-all)) ;;all user bookmarks
+        (GET "/:id"            request            (login-required request bookmarks/get))     ;;bookmark by id
 
-        (POST "/" request (login-required request bookmarks/insert))
+        (POST "/"              request            (login-required request bookmarks/insert))  ;;Create a bookmark
        
-        (PUT "/" {:keys [body]}       ;;update an existing bookmark
-          (let [{:keys [url name id]} body]
-            (response (bookmarks/update url name id))))
+        (PUT "/"               request            (login-required request bookmarks/update))  ;;update an existing bookmark
           
-        (DELETE "/:id" [id]          ;;delete an existing bookmark
-          (response (bookmarks/delete id))) 
+        (DELETE "/:id"         request            (login-required request bookmarks/delete))  ;;delete an existing bookmark  
       )
 
       (context "/user" []
 
         (POST "/register" {{:keys [username password]} :body} (auth/register-user username password))
 
-
-      
       )
 
       ;;Authentication
@@ -58,13 +52,14 @@
         (GET "/logged" {:keys [session]}
             (response
               (if (empty? session)
-                {:status 401 :message "Não está autorizado!"}
+                (:unauthorized response-messages)
                 (let [username (:user/username (auth/current-user session))]
-                  {:status 200 :message username}))))
+                  ((:ok-status response-messages) username )))))
       )
 
       ;;from tutorial, for debugging
-      (POST "/debug"                    request         (response (with-out-str (clojure.pprint/pprint request))))
+      (POST "/debug"                        request         (response (with-out-str (clojure.pprint/pprint request))))
+      (POST "/debug/:id"                    request         (response (with-out-str (clojure.pprint/pprint request))))
     
     )
 

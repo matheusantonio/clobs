@@ -47,23 +47,44 @@
     [url]
     (first (sql/find-by-keys ds :bookmark {:url url})))
 
-(def get-all
-    (sql/query ds ["select * from bookmark"]))
+(defn get-all
+    [user-id]
+    (jdbc/execute! ds
+        [(str "select b.id, b.url, ub.definedName, ub.private "
+              "from bookmark as b "
+                "inner join userBookmark as ub "
+                "on b.id = ub.bookmarkId "
+              "where ub.userId = ? ;") user-id]))
 
 (defn insert
     [url name]
     (sql/insert! ds :bookmark {:url url :name name}))
 
-(defn update
-    [url name id]
-    (sql/update! ds :bookmark {:url url :name name} {:id id}))
+;(defn update
+;    [url name id]
+;    (sql/update! ds :bookmark {:url url :name name} {:id id}))
 
 (defn delete
     [id]
     (sql/delete! ds :bookmark {:id id} ))
 
 (def top-bookmarks
-    bookmarks)
+    (jdbc/execute! ds
+        [(str "select * from bookmark as b "
+            "where exists ( "
+                    "select b.id, count(*) as qtd "
+                    "from userBookmark as ub "
+                    "where ub.bookmarkId = b.id "
+                    "and ub.private = false "
+                    "group by ub.bookmarkId "
+                    "order by qtd)"
+            "limit 10;")]))
 
 (def recent-bookmarks
-    bookmarks)
+    (jdbc/execute! ds
+        [(str "select b.id, b.url, b.name, ub.createdAt "
+            "from bookmark as b "
+                "inner join userBookmark as ub "
+                "on b.id = ub.bookmarkId "
+            "where ub.private = false "
+            "order by ub.createdAt desc;")]))

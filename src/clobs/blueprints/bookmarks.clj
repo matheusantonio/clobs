@@ -1,6 +1,7 @@
 (ns clobs.blueprints.bookmarks
     (:require [clobs.data.bookmarks         :as     bookmarks-data]
               [clobs.data.user_bookmark     :as     user-bm-data]
+              [clobs.auth                   :refer  [response-messages]]
               [clojure.pprint               :refer  [pprint]]
               [net.cgrand.enlive-html       :as     html]
               [org.httpkit.client           :as     http]))
@@ -35,19 +36,37 @@
           user-id (get-in request [:session :user-id])
           bookmark-id (create-bookmark url)]
         (if (user-bm-data/get-userbm user-id bookmark-id)
-            {:status 401 :error "User already has bookmark!"}
+            (:already-inserted response-messages)
             (user-bm-data/insert bookmark-id user-id name private))))
 
 (defn get
-    [id] (bookmarks-data/get-bookmark id))
+    [request]
+    (let [session (:session request)
+          bookmark-id (get-in request [:params :id])
+          user-id (:user-id session)]
+        (if (user-bm-data/user-has-bookmark user-id bookmark-id)
+            (bookmarks-data/get-bookmark bookmark-id)
+            (:unauthorized response-messages))))
 
-(def get-all
-    bookmarks-data/get-all)
+(defn get-all
+    [request]
+    (let [user-id (get-in request [:session :user-id])]
+        (bookmarks-data/get-all user-id)))
 
 (defn update
-    [url name id]
-    (bookmarks-data/update url name id))
+    [request]
+    (let [user-id     (get-in request [:session :user-id])
+          bookmark-id (get-in request [:body :id])
+          name        (get-in request [:body :name])
+          private     (get-in request [:body :private])]
+        (if (user-bm-data/user-has-bookmark user-id bookmark-id)
+            (user-bm-data/update-user-bookmark user-id bookmark-id name private)
+            (:unauthorized response-messages))))
 
 (defn delete
-    [id]
-    (bookmarks-data/delete id))
+    [request]
+    (let [user-id (get-in request [:session :user-id])
+          bookmark-id (get-in request [:params :id])]
+        (if (user-bm-data/user-has-bookmark user-id bookmark-id)
+            (user-bm-data/remove-user-bookmark user-id bookmark-id)
+            (:unauthorized response-messages))))
