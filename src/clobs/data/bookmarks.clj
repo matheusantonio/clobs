@@ -43,6 +43,10 @@
     [id]
     (sql/get-by-id ds :bookmark id))
 
+(defn get-url
+    [url]
+    (first (sql/find-by-keys ds :bookmark {:url url})))
+
 (def get-all
     (sql/query ds ["select * from bookmark"]))
 

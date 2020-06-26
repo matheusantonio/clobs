@@ -10,6 +10,8 @@
                  [seancorfield/next.jdbc "1.0.462"]
                  [mysql/mysql-connector-java "5.1.18"]
                  [buddy/buddy-auth "2.2.0"]
-                 [buddy/buddy-hashers "1.4.0"]]
+                 [buddy/buddy-hashers "1.4.0"]
+                 [enlive              "1.1.6"]
+                 [http-kit "2.1.18"]]
   :repl-options {:init-ns clobs.core}
   :main clobs.core)

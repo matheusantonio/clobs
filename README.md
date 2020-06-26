@@ -11,5 +11,6 @@ It uses:
 * Compojure for routing
 * Ring session middleware for session management
 * next-jdbc for database connection
-* MySql as database
+* MySql as databasey
+* Enlive and http-kit for web scrapping (getting titles by url)
 * Leiningen for project creation & dependencies management

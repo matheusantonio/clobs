@@ -8,7 +8,8 @@
             [ring.util.response               :refer [response]]
             [clobs.blueprints.index_bookmarks :as index]
             [clobs.blueprints.user_bookmarks  :as bookmarks]
-            [clobs.blueprints.auth            :as auth]))
+            [clobs.blueprints.auth            :as auth]
+            [clobs.auth                       :refer [login-required]]))
 
 (def my-routes
   (routes
@@ -25,9 +26,11 @@
         (GET "/"               []              (response bookmarks/get-all)) ;;index page (all user bookmarks)
         (GET "/:id"            [id]            (response (bookmarks/get (Integer/parseInt id)))) ;;bookmark by id
 
-        (POST "/" {:keys [body]}      ;;create a new bookmark
-          (let [{:keys [url name]} body]
-            (response (bookmarks/insert url name))))
+        (POST "/" request (login-required request bookmarks/insert))
+
+        ;(POST "/" {:keys [body]}      ;;create a new bookmark
+        ;  (let [{:keys [url name]} body]
+        ;    (response (bookmarks/insert url name))))
         
         (PUT "/" {:keys [body]}       ;;update an existing bookmark
           (let [{:keys [url name id]} body]
@@ -58,10 +61,10 @@
 
         (GET "/logged" {:keys [session]}
             (response
-              (if session
+              (if (empty? session)
+                {:status 401 :message "Não está autorizado!"}
                 (let [username (:user/username (auth/current-user session))]
-                  {:status 200 :message username})
-                {:status 401 :message "Não está autorizado!"})))
+                  {:status 200 :message username}))))
       )
 
       ;;from tutorial, for debugging
