@@ -4,11 +4,11 @@
             [compojure.core                   :refer [routes context GET POST PUT DELETE]]
             [compojure.route                  :refer [not-found]]
             [ring.middleware.json             :refer [wrap-json-response wrap-json-body]]
-            [ring.middleware.session          :as session]
+            [ring.middleware.session          :as     session]
             [ring.util.response               :refer [response]]
-            [clobs.blueprints.index_bookmarks :as index]
-            [clobs.blueprints.user_bookmarks  :as bookmarks]
-            [clobs.blueprints.auth            :as auth]
+            [clobs.blueprints.index           :as     index]
+            [clobs.blueprints.bookmarks       :as     bookmarks]
+            [clobs.blueprints.auth            :as     auth]
             [clobs.auth                       :refer [login-required]]))
 
 (def my-routes
@@ -27,11 +27,7 @@
         (GET "/:id"            [id]            (response (bookmarks/get (Integer/parseInt id)))) ;;bookmark by id
 
         (POST "/" request (login-required request bookmarks/insert))
-
-        ;(POST "/" {:keys [body]}      ;;create a new bookmark
-        ;  (let [{:keys [url name]} body]
-        ;    (response (bookmarks/insert url name))))
-        
+       
         (PUT "/" {:keys [body]}       ;;update an existing bookmark
           (let [{:keys [url name id]} body]
             (response (bookmarks/update url name id))))

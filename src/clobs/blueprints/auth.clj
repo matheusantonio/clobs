@@ -1,9 +1,8 @@
 (ns clobs.blueprints.auth
-    (:require [clobs.data.users :as users-data]
+    (:require [clobs.data.users                 :as    users-data]
               [clojure.pprint                   :refer [pprint]]
               [ring.util.response               :refer [response]]
               [clobs.data.users                 :refer [password-matches?]]))
-
 
 
 ;; User management

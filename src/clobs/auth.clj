@@ -3,12 +3,21 @@
               [clojure.pprint                   :refer [pprint]]))
 
 
-;(POST "/" request (login-required request bookmarks/insert))
+(def unauthorized-message {:status 401 :error "Unauthorized"})
+
+(defn is-authenticated?
+    [request]
+    (let [session (:session request)]
+        (empty? session)))
 
 (defn login-required
-    [request handler]
-    (let [session (:session request)]
+    ([request handler]
         (response
-            (if (empty? session)
-                {:status 401 :error "Unauthorized"}
-                (handler request)))))
+            (if (is-authenticated? request)
+                unauthorized-message
+                (handler request))))
+    ([request handler & params]
+        (response
+            (if (is-authenticated? request)
+                unauthorized-message
+                (handler request params)))))

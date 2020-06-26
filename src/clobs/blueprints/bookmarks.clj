@@ -1,15 +1,21 @@
-(ns clobs.blueprints.user_bookmarks
-    (:require [clobs.data.bookmarks :as bookmarks-data]
-              [clojure.pprint                   :refer [pprint]]
-              [clobs.data.user_bookmark :as user-bm-data]
-              [net.cgrand.enlive-html :as html]
-              [org.httpkit.client :as http]))
+(ns clobs.blueprints.bookmarks
+    (:require [clobs.data.bookmarks         :as     bookmarks-data]
+              [clobs.data.user_bookmark     :as     user-bm-data]
+              [clojure.pprint               :refer  [pprint]]
+              [net.cgrand.enlive-html       :as     html]
+              [org.httpkit.client           :as     http]))
 
-;; This file will be used to deal with route requests, validate results, etc
 
-(defn generate-bookmark-name
+(defn generate-bookmark-name ;webscraping function
     [url]
-    (first (:content (first (html/select (html/html-snippet @(http/get url))[:title]))))) ;webscrapping here
+    (as-> url u
+          (http/get u)              ;gets content from url
+          (html/html-snippet @u)    ;dereferences content from url
+          (html/select u [:title])  ;selects title tag
+          (first u)                 ;returns the first element of a strucutre with the tags content
+          (:content u)              ;get tag content
+          (first u)))               ;get first element from content
+    
 
 (defn create-bookmark
     [url]
