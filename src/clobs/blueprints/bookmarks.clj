@@ -22,7 +22,7 @@
     [url]
     (let [bookmark (bookmarks-data/get-url url)]
         (if bookmark
-            (:bookmark/id bookmark)
+            (:id bookmark)
             (as-> url u
                   (bookmarks-data/insert u (generate-bookmark-name u))
                   (:GENERATED_KEY u)))))

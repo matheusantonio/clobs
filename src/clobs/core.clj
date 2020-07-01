@@ -5,6 +5,7 @@
             [compojure.route                  :refer [not-found]]
             [ring.middleware.json             :refer [wrap-json-response wrap-json-body]]
             [ring.middleware.session          :as     session]
+            [ring.middleware.cors             :refer [wrap-cors]]
             [ring.util.response               :refer [response]]
             [clobs.blueprints.index           :as     index]
             [clobs.blueprints.bookmarks       :as     bookmarks]
@@ -69,7 +70,9 @@
   (-> my-routes
       session/wrap-session
       (wrap-json-body {:keywords? true}) ; maps json body to clojure map
-      wrap-json-response ))
+      wrap-json-response
+      (wrap-cors :access-control-allow-origin [#".*"]
+                 :access-control-allow-methods [:get :put :post :delete])))
 
 (defn -main
   []

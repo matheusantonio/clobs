@@ -35,6 +35,6 @@
 (defn password-matches?
     [username pass]
     (some-> (get-by-username username)
-            :user/password
+            :password
             (->> (hashers/check pass))))
 

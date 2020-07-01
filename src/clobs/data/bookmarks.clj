@@ -8,37 +8,6 @@
 ;; This file will be used for data retrieving
 
 
-
-;(comment dummy bookmarks for testing
-(def bookmarks
-    (list
-        {
-            :bookmarkId 1
-            :name "github"
-            :url "https://github.com/matheusantonio"
-        }
-        {
-            :bookmarkId 2
-            :name "facebook"
-            :url "https://facebook.com.br"
-        }
-        {
-            :bookmarkId 3
-            :name "google"
-            :url "https://google.com.br"
-        }
-        {
-            :bookmarkId 4
-            :name "youtube"
-            :url "https://youtube.com.br"
-        }
-        {
-            :bookmarkId 5
-            :name "clojure lists"
-            :url "https://clojuredocs.org/clojure.core/list"
-        }))
-;)
-
 (defn get-bookmark
     [id]
     (sql/get-by-id ds :bookmark id))
@@ -68,17 +37,28 @@
     [id]
     (sql/delete! ds :bookmark {:id id} ))
 
+;(def top-bookmarks
+;    (jdbc/execute! ds
+;            [(str "select * from bookmark as b "
+;                "where exists ( "
+;                        "select b.id, count(*) as qtd "
+;                        "from userBookmark as ub "
+;                        "where ub.bookmarkId = b.id "
+;                        "and ub.private = false "
+;                        "group by ub.bookmarkId "
+;                        "order by qtd)"
+;                "limit 10;")]))
+
 (def top-bookmarks
     (jdbc/execute! ds
-        [(str "select * from bookmark as b "
-            "where exists ( "
-                    "select b.id, count(*) as qtd "
-                    "from userBookmark as ub "
-                    "where ub.bookmarkId = b.id "
-                    "and ub.private = false "
-                    "group by ub.bookmarkId "
-                    "order by qtd)"
-            "limit 10;")]))
+        [(str
+            "select b.*, count(*) as qtd "
+            "from userBookmark as ub "
+                "inner join bookmark as b "
+                "on ub.bookmarkId = b.id "
+            "where ub.private = false "
+            "group by ub.bookmarkId "
+            "order by qtd limit 10")]))
 
 (def recent-bookmarks
     (jdbc/execute! ds
