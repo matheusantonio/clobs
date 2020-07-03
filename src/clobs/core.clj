@@ -5,6 +5,7 @@
             [compojure.route                  :refer [not-found]]
             [ring.middleware.json             :refer [wrap-json-response wrap-json-body]]
             [ring.middleware.session          :as     session]
+            [ring.middleware.session.cookie   :refer [cookie-store]]
             [ring.middleware.cors             :refer [wrap-cors]]
             [ring.util.response               :refer [response]]
             [clobs.blueprints.index           :as     index]
@@ -50,11 +51,11 @@
         
         (GET "/logout" [] (auth/logout))
 
-        (GET "/logged" {:keys [session]}
+        (GET "/loged" {:keys [session]}
             (response
               (if (empty? session)
                 (:unauthorized response-messages)
-                (let [username (:user/username (auth/current-user session))]
+                (let [username (:username (auth/current-user session))]
                   ((:ok-status response-messages) username )))))
       )
 
@@ -66,14 +67,24 @@
 
     (not-found {:error "Not found"})))
 
+
 (def app
   (-> my-routes
-      session/wrap-session
+      (session/wrap-session {:store (cookie-store {:key "33 118 164 239 9"})})
       (wrap-json-body {:keywords? true}) ; maps json body to clojure map
       wrap-json-response
-      (wrap-cors :access-control-allow-origin [#".*"]
-                 :access-control-allow-methods [:get :put :post :delete])))
+      (wrap-cors :access-control-allow-origin [#"http://localhost:8080"]
+                 :access-control-allow-methods [:get :put :post :delete]
+                 :access-control-allow-headers #{"accept"
+                                                 "accept-encoding"
+                                                 "accept-language"
+                                                 "authorization"
+                                                 "content-type"
+                                                 "origin"}
+                 :access-control-allow-credentials "true")
+      ))
 
 (defn -main
   []
   (run-jetty app {:port 3000}))
+

@@ -7,24 +7,23 @@
               [org.httpkit.client           :as     http]))
 
 
-(defn generate-bookmark-name ;webscraping function
+(defn generate-bookmark-name! ;webscraping function
     [url]
     (as-> url u
-          (http/get u)              ;gets content from url
+          (http/get u)              ;gets content from url -> SIDE EFFECT!
           (html/html-snippet @u)    ;dereferences content from url
           (html/select u [:title])  ;selects title tag
           (first u)                 ;returns the first element of a strucutre with the tags content
           (:content u)              ;get tag content
           (first u)))               ;get first element from content
     
-
 (defn create-bookmark
     [url]
     (let [bookmark (bookmarks-data/get-url url)]
         (if bookmark
             (:id bookmark)
             (as-> url u
-                  (bookmarks-data/insert u (generate-bookmark-name u))
+                  (bookmarks-data/insert u (generate-bookmark-name! u))
                   (:GENERATED_KEY u)))))
 
 (defn insert

@@ -7,7 +7,7 @@
 
 ;; User management
 (defn retrieve-id [username]
-    (:user/id (users-data/get-by-username username)))
+    (:id (users-data/get-by-username username)))
 
 (defn register-user [username password]
     (if (users-data/get-by-username username)
@@ -18,7 +18,7 @@
 (defn login [username password session]
     (if (password-matches? username password)
         (let [new-session (assoc session :user-id (retrieve-id username))]
-          (-> (response "Logged in session!")
+          (-> (response {:message "Logged in session!"})
               (assoc :session new-session)))
         (response {:error "Não autorizado!"})))
 

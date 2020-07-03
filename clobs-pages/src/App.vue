@@ -4,6 +4,7 @@
             <Header />
             <body>
                 <Index />
+                <Login />
             </body>
         </div>
     </div>
@@ -14,10 +15,11 @@
 
 import Header from './components/Header'
 import Index from './pages/Index'
+import Login from './pages/Login'
 
 export default {
 
-    components: {Header, Index}
+    components: {Header, Index, Login}
 
 }
 </script>

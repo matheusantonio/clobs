@@ -1,14 +1,18 @@
 <template>
     <div>
-        <div v-for="bookmark in topBookmarks" :key="bookmark.id">
-            <Bookmark :name="bookmark.name" :url="bookmark.url" :quantity="bookmark.qtd" top/>
+        <div>
+            <div v-for="bookmark in topBookmarks" :key="bookmark.id">
+                <Bookmark :name="bookmark.name" :url="bookmark.url" :quantity="bookmark.qtd" top/>
 
+            </div>
         </div>
 
         <hr>
 
-        <div v-for="bookmark in recentBookmarks" :key="bookmark.id">
-            <Bookmark :name="bookmark.name" :url="bookmark.url" :createdAt="bookmark.createdat" recent/>
+        <div>
+            <div v-for="bookmark in recentBookmarks" :key="bookmark.id">
+                <Bookmark :name="bookmark.name" :url="bookmark.url" :createdAt="bookmark.createdat" recent/>
+            </div>
         </div>
 
     
