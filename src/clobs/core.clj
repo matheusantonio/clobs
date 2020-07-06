@@ -7,7 +7,6 @@
             [ring.middleware.session          :as     session]
             [ring.middleware.session.cookie   :refer [cookie-store]]
             [ring.middleware.cors             :refer [wrap-cors]]
-            [ring.util.response               :refer [response]]
             [clobs.blueprints.index           :as     index]
             [clobs.blueprints.bookmarks       :as     bookmarks]
             [clobs.blueprints.auth            :as     auth]
@@ -18,8 +17,8 @@
     (context "/clobs" []
     
       ;;home page
-      (GET "/top-bookmarks"       []              (response index/top)) ;;top 10 bookmarks
-      (GET "/recent-bookmarks"    []              (response index/recent)) ;;last 10 bookmarks added
+      (GET "/top-bookmarks"       []              index/top) ;;top 10 bookmarks
+      (GET "/recent-bookmarks"    []              index/recent) ;;last 10 bookmarks added
 
       ;;user bookmarks
       (context "/bookmarks" []
@@ -52,16 +51,15 @@
         (GET "/logout" [] (auth/logout))
 
         (GET "/loged" {:keys [session]}
-            (response
-              (if (empty? session)
-                (:unauthorized response-messages)
-                (let [username (:username (auth/current-user session))]
-                  ((:ok-status response-messages) username )))))
+            (if (empty? session)
+              {:status 401}
+              (let [username (:username (auth/current-user session))]
+                ((:ok-status response-messages) username ))))
       )
 
       ;;from tutorial, for debugging
-      (POST "/debug"                        request         (response (with-out-str (clojure.pprint/pprint request))))
-      (POST "/debug/:id"                    request         (response (with-out-str (clojure.pprint/pprint request))))
+      (POST "/debug"                        request         ((:ok-status response-messages) (with-out-str (clojure.pprint/pprint request))))
+      (POST "/debug/:id"                    request         ((:ok-status response-messages) (with-out-str (clojure.pprint/pprint request))))
     
     )
 

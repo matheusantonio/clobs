@@ -1,7 +1,7 @@
 (ns clobs.blueprints.auth
     (:require [clobs.data.users                 :as    users-data]
               [clojure.pprint                   :refer [pprint]]
-              [ring.util.response               :refer [response]]
+              [clobs.auth                       :refer [response-messages]]
               [clobs.data.users                 :refer [password-matches?]]))
 
 
@@ -11,19 +11,19 @@
 
 (defn register-user [username password]
     (if (users-data/get-by-username username)
-        (response {:error "User already exists!"})
+        ((:conflict response-messages) "User already exists!")
         (users-data/insert username password)))
 
 ;; Session management
 (defn login [username password session]
     (if (password-matches? username password)
         (let [new-session (assoc session :user-id (retrieve-id username))]
-          (-> (response {:message "Logged in session!"})
+          (-> ((:ok-status response-messages) "Logged in session!")
               (assoc :session new-session)))
-        (response {:error "Não autorizado!"})))
+        ({:status 401})))
 
 (defn logout []
-    (-> (response "Session deleted")
+    (-> ((:ok-status response-messages) "Session deleted")
         (assoc :session nil)))
 
 (defn current-user [session]

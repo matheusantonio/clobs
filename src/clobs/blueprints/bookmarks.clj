@@ -24,7 +24,7 @@
             (:id bookmark)
             (as-> url u
                   (bookmarks-data/insert u (generate-bookmark-name! u))
-                  (:GENERATED_KEY u)))))
+                  (:generated_key u)))))
 
 (defn insert
     [request]
@@ -35,8 +35,8 @@
           user-id (get-in request [:session :user-id])
           bookmark-id (create-bookmark url)]
         (if (user-bm-data/get-userbm user-id bookmark-id)
-            (:already-inserted response-messages)
-            (user-bm-data/insert bookmark-id user-id name private))))
+            ((:conflict response-messages) "Bookmark já cadastrada!")
+            ((:created response-messages)(user-bm-data/insert bookmark-id user-id name private)))))
 
 (defn get
     [request]
@@ -44,13 +44,13 @@
           bookmark-id (get-in request [:params :id])
           user-id (:user-id session)]
         (if (user-bm-data/user-has-bookmark user-id bookmark-id)
-            (bookmarks-data/get-bookmark bookmark-id)
-            (:unauthorized response-messages))))
+            ((:ok-status response-messages)(bookmarks-data/get-bookmark bookmark-id))
+            {:status 401})))
 
 (defn get-all
     [request]
     (let [user-id (get-in request [:session :user-id])]
-        (bookmarks-data/get-all user-id)))
+        ((:ok-status response-messages)(bookmarks-data/get-all user-id))))
 
 (defn update
     [request]
@@ -60,7 +60,7 @@
           private     (get-in request [:body :private])]
         (if (user-bm-data/user-has-bookmark user-id bookmark-id)
             (user-bm-data/update-user-bookmark user-id bookmark-id name private)
-            (:unauthorized response-messages))))
+            {:status 401})))
 
 (defn delete
     [request]
@@ -68,4 +68,4 @@
           bookmark-id (get-in request [:params :id])]
         (if (user-bm-data/user-has-bookmark user-id bookmark-id)
             (user-bm-data/remove-user-bookmark user-id bookmark-id)
-            (:unauthorized response-messages))))
+            {:status 401})))

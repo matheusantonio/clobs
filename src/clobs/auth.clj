@@ -1,15 +1,20 @@
 (ns clobs.auth
-    (:require [ring.util.response               :refer [response]]
-              [clojure.pprint                   :refer [pprint]]))
+    (:require [clojure.pprint                   :refer [pprint]]))
 
+(defn response [status body & {:as headers}]
+    {:status status :body body :headers headers})
 
 (def response-messages
     {
-        :ok-status (fn [message] {:status 200 :message message})
-        :error-status (fn [message] {:status 500 :message message})
-        :unauthorized {:status 401 :error "Unauthorized"}
-        :not-found {:status 404 :message "Not found"}
-        :already-inserted {:status 401 :error "User already has bookmark!"}
+        :ok-status (partial response 200)
+        :created (partial response 201)
+
+        :error-status (partial response 500)
+        
+        :unauthorized (partial response 401)
+        :not-found (partial response 404)
+        :not-acceptable (partial response 406)
+        :conflict (partial response 409)
     })
 
 
@@ -20,12 +25,10 @@
 
 (defn login-required
     ([request handler]
-        (response
-            (if (is-authenticated? request)
-                (:unauthorized response-messages)
-                (handler request))))
+        (if (is-authenticated? request)
+            (:unauthorized response-messages)
+            (handler request)))
     ([request handler & params]
-        (response
-            (if (is-authenticated? request)
-                (:unauthorized response-messages)
-                (handler request params)))))
+        (if (is-authenticated? request)
+            (:unauthorized response-messages)
+            (handler request params))))
