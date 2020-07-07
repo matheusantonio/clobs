@@ -1,11 +1,10 @@
 <template>
-    <div id="app">
-        <div id="page-wrapper" class="gray-bg">
+    <div id="app" class="container-fluid bg-light">
+        <div id="page-wrapper">
             <Header />
-            <body>
-                <Index />
-                <Login />
-            </body>
+            <div class="p-5">
+                <router-view></router-view>
+            </div>
         </div>
     </div>
   
@@ -14,12 +13,11 @@
 <script>
 
 import Header from './components/Header'
-import Index from './pages/Index'
-import Login from './pages/Login'
 
 export default {
-
-    components: {Header, Index, Login}
+    components : {
+        Header
+    }
 
 }
 </script>

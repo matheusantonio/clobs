@@ -1,16 +1,34 @@
 <template>
     <div>
-        <div v-if="top">
-            <a :href="url">{{name}}</a>
-            <p>{{quantity}}</p>
+
+        <div v-if="top" class="row align-items-center">
+            <a :href="url" class="col">
+                {{name}}
+            </a>
+            <p class="col">
+                [{{quantity}}]
+                </p>
         </div>
-        <div v-else-if="recent">
-            <a :href="url">{{name}}</a>
-            <p>{{createdAt}}</p>
+
+        <div v-else-if="recent" class="row align-items-center">
+            <a :href="url" class="col">
+                {{name}}
+            </a>
+            <p class="col">
+                [{{createdAt}}]
+            </p>
         </div>
-        <div v-else-if="user">
-            <a :href="url">{{name}}</a>
-            <p v-if="isPrivate">[Private]</p>
+
+        <div v-else-if="user" class="row align-items-center">
+            <a :href="url" class="col">
+                {{name}}
+            </a>
+            <p v-if="isPrivate" class="col">
+                [Private]
+            </p>
+            <p v-else class="col">
+                [Public]
+            </p>
         </div>
 
     </div>

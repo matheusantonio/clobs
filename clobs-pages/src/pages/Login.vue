@@ -20,7 +20,7 @@
 
 <script>
 
-import Login from "../services/Login"
+import Login from "../services/Auth"
 
 export default {
 
@@ -34,22 +34,21 @@ export default {
     methods :{
         login() {
             Login.login("matheus-user", "mypass", (response) => {
-                document.getElementById('login').innerHTML = response.data.message
+                document.getElementById('login').innerHTML = response.data
             })
         },
         logout() {
             Login.logout((response) => {
-                //console.log(response)
                 document.getElementById('logout').innerHTML = response.data
             })
         },
         loged() {
             Login.loged((response) => {
-                if(response.data.message == undefined){
-                    document.getElementById('loged').innerHTML = response.data.error
+                if(response.status == 401){
+                    document.getElementById('loged').innerHTML = "Não autorizado!"
                 }
                 else {
-                    document.getElementById('loged').innerHTML = response.data.message
+                    document.getElementById('loged').innerHTML = response.data
                 }
                 
             })
