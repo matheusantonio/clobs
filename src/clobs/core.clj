@@ -10,7 +10,7 @@
             [clobs.blueprints.index           :as     index]
             [clobs.blueprints.bookmarks       :as     bookmarks]
             [clobs.blueprints.auth            :as     auth]
-            [clobs.auth                       :refer [login-required response-messages]]))
+            [clobs.auth                       :refer [login-required ok-status unauthorized-status]]))
 
 (def my-routes
   (routes
@@ -52,14 +52,14 @@
 
         (GET "/loged" {:keys [session]}
             (if (empty? session)
-              {:status 401}
+              (unauthorized-status { :error "Not authenticated"})
               (let [username (:username (auth/current-user session))]
-                ((:ok-status response-messages) username ))))
+                (ok-status {:username username}))))
       )
 
       ;;from tutorial, for debugging
-      (POST "/debug"                        request         ((:ok-status response-messages) (with-out-str (clojure.pprint/pprint request))))
-      (POST "/debug/:id"                    request         ((:ok-status response-messages) (with-out-str (clojure.pprint/pprint request))))
+      (POST "/debug"                        request         (ok-status (with-out-str (clojure.pprint/pprint request))))
+      (POST "/debug/:id"                    request         (ok-status (with-out-str (clojure.pprint/pprint request))))
     
     )
 

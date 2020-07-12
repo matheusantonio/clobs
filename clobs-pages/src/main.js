@@ -1,5 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import VueFormulate from '@braid/vue-formulate'
+
 import App from './App'
 import Index from './pages/Index'
 import User from './pages/User'
@@ -10,6 +12,7 @@ import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 Vue.use(VueRouter)
+Vue.use(VueFormulate)
 
 var router = new VueRouter({
     routes: [

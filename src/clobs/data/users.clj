@@ -16,7 +16,11 @@
 
 (defn get-by-username
     [username]
-    (first (sql/find-by-keys ds :user {:username username})))
+    ;(first (sql/find-by-keys ds :user {:username username})))
+    (let [user (sql/find-by-keys ds :user {:username username})]
+        (if (> (count user) 0)
+            (first user)
+            nil)))
 
 (defn insert
     [username password]

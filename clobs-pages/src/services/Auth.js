@@ -7,6 +7,8 @@ export default {
         const urlLogin = urlBase + "/auth/login"
         axios.post(urlLogin, {username:username, password:password}, {withCredentials: true}).then((response) => {
             callback(response)
+        }, (error) => {
+            callback(error.response, true)
         })
     },
     logout: (callback) => {
@@ -15,13 +17,15 @@ export default {
             callback(response)
         })
     },
+
     loged: (callback) => {
         const urlLoged = urlBase + "/auth/loged"
         axios.get(urlLoged, {withCredentials : true}).then((response) => {
             callback(response)
-        },
-        (error) => {
-            return Promise.reject(error)
+        }, (error) => {
+            if(error.response.status == 401){
+                callback(error.response, true)
+            }
         })
     }
 }

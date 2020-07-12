@@ -1,7 +1,7 @@
 (ns clobs.blueprints.auth
     (:require [clobs.data.users                 :as    users-data]
               [clojure.pprint                   :refer [pprint]]
-              [clobs.auth                       :refer [response-messages]]
+              [clobs.auth                       :refer [conflict-status ok-status unauthorized-status]]
               [clobs.data.users                 :refer [password-matches?]]))
 
 
@@ -11,19 +11,19 @@
 
 (defn register-user [username password]
     (if (users-data/get-by-username username)
-        ((:conflict response-messages) "User already exists!")
+        (conflict-status {:error "User already exists!"})
         (users-data/insert username password)))
 
 ;; Session management
 (defn login [username password session]
     (if (password-matches? username password)
         (let [new-session (assoc session :user-id (retrieve-id username))]
-          (-> ((:ok-status response-messages) "Logged in session!")
+          (-> (ok-status "Logged in session!")
               (assoc :session new-session)))
-        ({:status 401})))
+        (unauthorized-status {:error "Usuário ou senha incorretos"})))
 
 (defn logout []
-    (-> ((:ok-status response-messages) "Session deleted")
+    (-> (ok-status "Session deleted")
         (assoc :session nil)))
 
 (defn current-user [session]

@@ -4,18 +4,15 @@
 (defn response [status body & {:as headers}]
     {:status status :body body :headers headers})
 
-(def response-messages
-    {
-        :ok-status (partial response 200)
-        :created (partial response 201)
+(def ok-status (partial response 200))
+(def created-status (partial response 201))
 
-        :error-status (partial response 500)
+(def error-status (partial response 500))
         
-        :unauthorized (partial response 401)
-        :not-found (partial response 404)
-        :not-acceptable (partial response 406)
-        :conflict (partial response 409)
-    })
+(def unauthorized-status (partial response 401))
+(def not-found-status (partial response 404))
+(def not-acceptable-status (partial response 406))
+(def conflict-status (partial response 409))
 
 
 (defn is-authenticated?
@@ -26,9 +23,9 @@
 (defn login-required
     ([request handler]
         (if (is-authenticated? request)
-            (:unauthorized response-messages)
+            (unauthorized-status {})
             (handler request)))
     ([request handler & params]
         (if (is-authenticated? request)
-            (:unauthorized response-messages)
+            (unauthorized-status {})
             (handler request params))))

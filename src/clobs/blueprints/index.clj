@@ -1,11 +1,11 @@
 (ns clobs.blueprints.index
     (:require [clobs.data.bookmarks :as    bookmarks-data]
-              [clobs.auth           :refer [response-messages]]))
+              [clobs.auth           :refer [ok-status]]))
 
 ;; This file will be used to deal with route requests, validate results, etc
 
 (def top
-    ((:ok-status response-messages) bookmarks-data/top-bookmarks))
+    (ok-status bookmarks-data/top-bookmarks))
 
 (def recent
-    ((:ok-status response-messages)bookmarks-data/recent-bookmarks))
+    (ok-status bookmarks-data/recent-bookmarks))

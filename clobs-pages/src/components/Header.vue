@@ -17,20 +17,22 @@
           <div class="row">
             <div v-if="loged">
                 <span class="col-6">Welcome, {{username}}</span>
-                <span class="col-6" @click="logout">Logout</span>
+                <p class="col-6" @click="logout">Logout</p>
             </div>
-
+            
             <div v-else>
-              
-                <form @submit="login">
-                  <label class="col-3">Please, login </label>
+                <FormulateForm @submit="login">
 
-                  <input type="text" placeholder="username" v-model="login_username" name="login_username" class="col-3 m-1">
-                  <input type="password" v-model="login_password" name="login_password" class="col-3 m-1">
-                  
-                  
-                  <input type="submit" class="col-2 m-1">
-                </form>
+                    <FormulateInput placeholder="username" name="username" class="col-3 m-1"/>
+
+                    <FormulateInput type="password" name="password" class="col-3 m-1"/>
+
+                    <FormulateInput type="submit" class="col-2 m-1"/>
+
+                </FormulateForm>
+
+                <span id="loginErrors" class="text-danger">{{loginErrors}}</span>
+              
             </div>
           </div>
         </div>
@@ -61,32 +63,41 @@ export default {
       return {
         loged : false,
         username : null,
-        login_username : null,
-        login_password : null
+        loginErrors : ""
       }
     },
     methods : {
-      login() {
-        Auth.login(this.login_username, this.login_password, (response) => {
-          if(response.data.error == undefined) {
+      login(data) {
+        Auth.login(data.username, data.password, (response, error=false) => {
+          if(!error) {
             this.loged = true
+            this.loginErrors = ""
+            Auth.loged((response) => {
+              if(response.data != undefined){
+                this.username = response.data.username
+              }
+            })
+          } else {
+            this.loginErrors = response.data.error
           }
         })
       },
+
       logout() {
         Auth.logout(() => {
           this.loged = false
+          this.username = null
+          this.$forceUpdate()
         })
       }
     },
     mounted : function() {
-      Auth.loged((response) => {
-        if(response.data.message != undefined){
-          this.username=response.data.message
-          console.log(this.username)
+      this.loginErrors = ""
+      Auth.loged((response, error=false) => {
+        if(!error){
+          this.username=response.data.username
           this.loged=true
         }
-
       })
     }
 

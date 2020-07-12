@@ -1,11 +1,12 @@
 (ns clobs.blueprints.bookmarks
     (:require [clobs.data.bookmarks         :as     bookmarks-data]
               [clobs.data.user_bookmark     :as     user-bm-data]
-              [clobs.auth                   :refer  [response-messages]]
+              [clobs.auth                   :refer  [conflict-status ok-status created-status error-status]]
               [clojure.pprint               :refer  [pprint]]
               [net.cgrand.enlive-html       :as     html]
               [org.httpkit.client           :as     http]))
 
+(def not-user-bookmark (error-status {:error "Bookmark not found for user"}))
 
 (defn generate-bookmark-name! ;webscraping function
     [url]
@@ -35,8 +36,8 @@
           user-id (get-in request [:session :user-id])
           bookmark-id (create-bookmark url)]
         (if (user-bm-data/get-userbm user-id bookmark-id)
-            ((:conflict response-messages) "Bookmark já cadastrada!")
-            ((:created response-messages)(user-bm-data/insert bookmark-id user-id name private)))))
+            (conflict-status {:error "Bookmark already registered!"} )
+            (created-status (user-bm-data/insert bookmark-id user-id name private)))))
 
 (defn get
     [request]
@@ -44,13 +45,13 @@
           bookmark-id (get-in request [:params :id])
           user-id (:user-id session)]
         (if (user-bm-data/user-has-bookmark user-id bookmark-id)
-            ((:ok-status response-messages)(bookmarks-data/get-bookmark bookmark-id))
-            {:status 401})))
+            (ok-status (bookmarks-data/get-bookmark bookmark-id))
+            not-user-bookmark)))
 
 (defn get-all
     [request]
     (let [user-id (get-in request [:session :user-id])]
-        ((:ok-status response-messages)(bookmarks-data/get-all user-id))))
+        (ok-status (bookmarks-data/get-all user-id))))
 
 (defn update
     [request]
@@ -60,7 +61,7 @@
           private     (get-in request [:body :private])]
         (if (user-bm-data/user-has-bookmark user-id bookmark-id)
             (user-bm-data/update-user-bookmark user-id bookmark-id name private)
-            {:status 401})))
+            not-user-bookmark)))
 
 (defn delete
     [request]
@@ -68,4 +69,4 @@
           bookmark-id (get-in request [:params :id])]
         (if (user-bm-data/user-has-bookmark user-id bookmark-id)
             (user-bm-data/remove-user-bookmark user-id bookmark-id)
-            {:status 401})))
+            not-user-bookmark)))

@@ -23,8 +23,11 @@ export default {
     components : {Bookmark},
     mounted : function() {
         User.getBookmarks((response) => {
-            this.bookmarks = response.data
-            console.log(response)
+            if(response.status == 200){
+                this.bookmarks = response.data
+            } else {
+                this.$router.push({ path : "/"})
+            }
         })
     }
 
