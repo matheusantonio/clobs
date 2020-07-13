@@ -15,4 +15,5 @@
                  [enlive              "1.1.6"]
                  [http-kit "2.1.18"]]
   :repl-options {:init-ns clobs.core}
+  :profiles {:uberjar {:aot :all}}
   :main clobs.core)
