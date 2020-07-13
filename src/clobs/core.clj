@@ -35,7 +35,7 @@
 
       (context "/user" []
 
-        (POST "/register" {{:keys [username password]} :body} (auth/register-user username password))
+        (POST "/register"      request            (auth/register-user request))
 
       )
 

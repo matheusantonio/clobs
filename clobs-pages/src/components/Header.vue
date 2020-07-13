@@ -12,7 +12,7 @@
           </div>
         
 
-        <div :key="this.$store.state.loged" class="col-4">
+        <div  class="col-4">
 
           <div>
             <div v-if="this.$store.state.loged">
@@ -22,13 +22,13 @@
             
             <div v-else>
               
-              <router-link :key="$route.params.register" :to="{name: 'login'}" tag="button" class="ml-2 mr-2 btn btn-outline-info">
+              <router-link to="/login" tag="button" class="ml-2 mr-2 btn btn-outline-info">
                     Login
               </router-link>
 
               or 
 
-              <router-link :key="$route.params.register" :to="{name: 'login', params: {register : true}}" tag="button" class="ml-2 mr-2 btn btn-outline-info">
+              <router-link to="/register" tag="button" class="ml-2 mr-2 btn btn-outline-info">
                     Register
               </router-link>
               
@@ -63,8 +63,7 @@ import Auth from "../services/Auth.js"
 export default {
     data : function() {
       return {
-        username : null,
-        loginErrors : ""
+        username : null
       }
     },
     methods : {
@@ -72,6 +71,7 @@ export default {
         Auth.logout(() => {
           this.$store.commit('logout')
           this.username = null
+          this.$router.push({ path : "/"})
         })
       },
       search(data) {
@@ -79,7 +79,6 @@ export default {
       }
     },
     mounted : function() {
-      this.loginErrors = ""
       Auth.loged((response) => {
         if(response.status == 200){
           this.username=response.data.username

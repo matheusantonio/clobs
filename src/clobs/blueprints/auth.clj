@@ -1,7 +1,7 @@
 (ns clobs.blueprints.auth
     (:require [clobs.data.users                 :as    users-data]
               [clojure.pprint                   :refer [pprint]]
-              [clobs.auth                       :refer [conflict-status ok-status unauthorized-status]]
+              [clobs.auth                       :refer [conflict-status ok-status unauthorized-status not-acceptable-status created-status]]
               [clobs.data.users                 :refer [password-matches?]]))
 
 
@@ -9,10 +9,15 @@
 (defn retrieve-id [username]
     (:id (users-data/get-by-username username)))
 
-(defn register-user [username password]
-    (if (users-data/get-by-username username)
-        (conflict-status {:error "User already exists!"})
-        (users-data/insert username password)))
+(defn register-user [request]
+    (let [username (get-in request [:body :username])
+          password (get-in request [:body :password])]
+        (if (or (nil? username) (nil? password))
+            (not-acceptable-status {:error "Username or password not recovered"})
+            (if (users-data/get-by-username username)
+                (conflict-status {:error "User already exists!"})
+                (created-status (users-data/insert username password))))))
+    
 
 ;; Session management
 (defn login [username password session]

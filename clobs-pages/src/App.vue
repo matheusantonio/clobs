@@ -1,7 +1,7 @@
 <template>
     <div id="app" class="container bg-light">
         <div id="page-wrapper">
-            <Header />
+            <Header :key="this.$store.state.loged"/>
             <div class="container-flush p-5">
                 <router-view></router-view>
             </div>

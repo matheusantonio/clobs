@@ -6,6 +6,7 @@ import App from './App'
 import Index from './pages/Index'
 import User from './pages/User'
 import Login from './pages/Login'
+import Register from './pages/Register'
 import Error from './pages/Error'
 
 import 'bootstrap';
@@ -40,9 +41,11 @@ var router = new VueRouter({
         },
         {
             path: '/login',
-            name: 'login',
             component : Login,
-            props : true
+        },
+        {
+            path : '/register',
+            component: Register 
         },
         {
             path: '/error',

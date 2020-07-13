@@ -1,9 +1,6 @@
 <template>
-    
     <div class="shadow border">
-
-        <Auth />
-
+        <Auth register />
 
     </div>
 </template>

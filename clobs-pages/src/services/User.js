@@ -17,6 +17,18 @@ export default {
             callback(response)
         })
     },
+    createBookmark : (url, name, isPrivate, callback) => {
+        axios.post(urlBase, {
+            url : url,
+            name : name,
+            private : isPrivate
+        }, {withCredentials : true})
+        .then((response) => {
+            callback(response)
+        }, (error) => {
+            callback(error.response)
+        })
+    },
     removeBookmark : (id, callback) => {
         const url = urlBase + "/" + id
         axios.delete(url, {withCredentials : true}).then((response) => {
