@@ -37,19 +37,7 @@
     [id]
     (sql/delete! ds :bookmark {:id id} ))
 
-;(def top-bookmarks
-;    (jdbc/execute! ds
-;            [(str "select * from bookmark as b "
-;                "where exists ( "
-;                        "select b.id, count(*) as qtd "
-;                        "from userBookmark as ub "
-;                        "where ub.bookmarkId = b.id "
-;                        "and ub.private = false "
-;                        "group by ub.bookmarkId "
-;                        "order by qtd)"
-;                "limit 10;")]))
-
-(def top-bookmarks
+(defn top-bookmarks []
     (jdbc/execute! ds
         [(str
             "select b.*, count(*) as qtd "
@@ -60,7 +48,7 @@
             "group by ub.bookmarkId "
             "order by qtd limit 10")]))
 
-(def recent-bookmarks
+(defn recent-bookmarks []
     (jdbc/execute! ds
         [(str "select b.id, b.url, b.name, ub.createdAt "
             "from bookmark as b "

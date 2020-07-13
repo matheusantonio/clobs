@@ -11,9 +11,29 @@ export default {
         })
     },
     getBookmark : (id, callback) => {
-        const url = urlBase + id
-        axios.get(url, {withCredential : true}).then((response) => {
+        const url = urlBase + "/" + id
+        console.log(url)
+        axios.get(url, {withCredentials : true}).then((response) => {
             callback(response)
+        })
+    },
+    removeBookmark : (id, callback) => {
+        const url = urlBase + "/" + id
+        axios.delete(url, {withCredentials : true}).then((response) => {
+            callback(response)
+        })
+    },
+    editBookmark : (id, name, isPrivate, callback) => {
+        axios.put(urlBase, {
+            id : id,
+            name : name,
+            private : isPrivate
+        },
+        {withCredentials : true})
+        .then((response) => {
+            callback(response)
+        }, (error) => {
+            callback(error.response)
         })
     }
 }

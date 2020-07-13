@@ -62,7 +62,7 @@ export default {
             Auth.login(this.username, this.password, (response, error=false) => {
             if(!error) {
                 this.errors = ""
-                this.$forceUpdate()
+                this.$store.commit('login')
                 this.$router.push({path : "/user"})
             } else {
                 this.password=null

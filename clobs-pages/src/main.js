@@ -1,6 +1,6 @@
 import Vue from 'vue'
+import Vuex from 'vuex'
 import VueRouter from 'vue-router'
-import VueFormulate from '@braid/vue-formulate'
 
 import App from './App'
 import Index from './pages/Index'
@@ -12,7 +12,21 @@ import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 Vue.use(VueRouter)
-Vue.use(VueFormulate)
+Vue.use(Vuex)
+
+const store = new Vuex.Store({
+    state : {
+        loged : false
+    },
+    mutations : {
+        login(state) {
+            state.loged = true
+        },
+        logout(state) {
+            state.loged = false
+        }
+    }
+})
 
 var router = new VueRouter({
     routes: [
@@ -38,6 +52,7 @@ var router = new VueRouter({
 })
 
 new Vue({
+    store,
     router,
     render: h => h(App)
 }).$mount("#app")

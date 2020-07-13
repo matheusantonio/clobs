@@ -17,6 +17,7 @@
           (first u)                 ;returns the first element of a strucutre with the tags content
           (:content u)              ;get tag content
           (first u)))               ;get first element from content
+          
     
 (defn create-bookmark
     [url]

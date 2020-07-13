@@ -9,7 +9,7 @@ export default {
         .then((response) => {
             callback(response)
         }, (error) => {
-            callback(error.response, true)
+            callback(error.response)
         })
     },
     logout: (callback) => {
@@ -25,7 +25,7 @@ export default {
             callback(response)
         }, (error) => {
             if(error.response.status == 401){
-                callback(error.response, true)
+                callback(error.response)
             }
         })
     },

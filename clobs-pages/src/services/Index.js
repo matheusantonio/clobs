@@ -6,17 +6,13 @@ export default {
     getTopBookmarks: (callback) => {
         const urlTopBookmarks = urlBase + "/top-bookmarks"
         axios.get(urlTopBookmarks).then((bookmarks) => {
-            if(bookmarks) {
-                callback(bookmarks)
-            }
+            callback(bookmarks)
         })
     },
     getRecentBookmarks: (callback) => {
         const urlRecentBookmarks = urlBase + "/recent-bookmarks"
         axios.get(urlRecentBookmarks).then((bookmarks) => {
-            if(bookmarks) {
-                callback(bookmarks)
-            }
+            callback(bookmarks)
         })
     }
 }

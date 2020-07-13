@@ -12,10 +12,10 @@
           </div>
         
 
-        <div :key="loged" class="col-4">
+        <div :key="this.$store.state.loged" class="col-4">
 
           <div>
-            <div v-if="loged">
+            <div v-if="this.$store.state.loged">
                 <span class="m-4">Welcome, {{username}}</span>
                 <p class="btn btn-outline-info" @click="logout">Logout</p>
             </div>
@@ -50,10 +50,6 @@
                 <input placeholder="Search" name="search" class="form-control" />
                 <input type="submit" class="btn btn-primary" value="Search"/>
             </form>
-            <!-- <FormulateForm class="nav-link" @submit="search">
-              <FormulateInput placeholder="Search" name="search" />
-              <FormulateForm type="submit" /> 
-            </FormulateForm> -->
         </li>
       </ul>
 
@@ -67,7 +63,6 @@ import Auth from "../services/Auth.js"
 export default {
     data : function() {
       return {
-        loged : false,
         username : null,
         loginErrors : ""
       }
@@ -75,9 +70,8 @@ export default {
     methods : {
       logout() {
         Auth.logout(() => {
-          this.loged = false
+          this.$store.commit('logout')
           this.username = null
-          this.$forceUpdate()
         })
       },
       search(data) {
@@ -86,10 +80,10 @@ export default {
     },
     mounted : function() {
       this.loginErrors = ""
-      Auth.loged((response, error=false) => {
-        if(!error){
+      Auth.loged((response) => {
+        if(response.status == 200){
           this.username=response.data.username
-          this.loged=true
+          this.$store.commit('login')
         }
       })
     }

@@ -4,8 +4,10 @@
 
 ;; This file will be used to deal with route requests, validate results, etc
 
-(def top
-    (ok-status bookmarks-data/top-bookmarks))
+(defn top
+    []
+    (ok-status (bookmarks-data/top-bookmarks)))
 
-(def recent
-    (ok-status bookmarks-data/recent-bookmarks))
+(defn recent
+    []
+    (ok-status (bookmarks-data/recent-bookmarks)))

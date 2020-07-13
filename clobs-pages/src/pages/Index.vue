@@ -43,12 +43,15 @@ export default {
     },
     components : { Bookmark },
     mounted : function() {
-        Index.getTopBookmarks(bookmarks => {
+
+        Index.getTopBookmarks((bookmarks) => {
             this.topBookmarks = bookmarks.data
         })
-        Index.getRecentBookmarks(bookmarks => {
+
+        Index.getRecentBookmarks((bookmarks) => {
             this.recentBookmarks = bookmarks.data
         })
+        
     }
 }
 </script>

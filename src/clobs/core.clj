@@ -17,8 +17,8 @@
     (context "/clobs" []
     
       ;;home page
-      (GET "/top-bookmarks"       []              index/top) ;;top 10 bookmarks
-      (GET "/recent-bookmarks"    []              index/recent) ;;last 10 bookmarks added
+      (GET "/top-bookmarks"       []              (index/top)) ;;top 10 bookmarks
+      (GET "/recent-bookmarks"    []              (index/recent)) ;;last 10 bookmarks added
 
       ;;user bookmarks
       (context "/bookmarks" []
