@@ -1,8 +1,8 @@
 <template>
-    <div id="app" class="container-fluid bg-light">
+    <div id="app" class="container bg-light">
         <div id="page-wrapper">
             <Header />
-            <div class="p-5">
+            <div class="container-flush p-5">
                 <router-view></router-view>
             </div>
         </div>

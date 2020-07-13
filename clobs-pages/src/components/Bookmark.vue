@@ -1,33 +1,33 @@
 <template>
     <div>
 
-        <div v-if="top" class="row align-items-center">
-            <a :href="url" class="col">
+        <div v-if="top">
+            <a :href="url">
                 {{name}}
             </a>
-            <p class="col">
-                [{{quantity}}]
+            <p class="badge badge-info m-1">
+                {{quantity}}
                 </p>
         </div>
 
-        <div v-else-if="recent" class="row align-items-center">
-            <a :href="url" class="col">
+        <div v-else-if="recent">
+            <a :href="url">
                 {{name}}
             </a>
-            <p class="col">
-                [{{createdAt}}]
+            <p class="badge badge-info m-1">
+                {{createdAt}}
             </p>
         </div>
 
-        <div v-else-if="user" class="row align-items-center">
-            <a :href="url" class="col">
+        <div v-else-if="user">
+            <a :href="url" >
                 {{name}}
             </a>
-            <p v-if="isPrivate" class="col">
-                [Private]
+            <p v-if="isPrivate" class="badge badge-info m-1">
+                Private
             </p>
-            <p v-else class="col">
-                [Public]
+            <p v-else class="badge badge-info m-1">
+                Public
             </p>
         </div>
 

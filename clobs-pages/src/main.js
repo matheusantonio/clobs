@@ -16,10 +16,24 @@ Vue.use(VueFormulate)
 
 var router = new VueRouter({
     routes: [
-        { path: '/', component : Index},
-        { path: '/user', component : User},
-        { path: '/login', component : Login},
-        { path: '/error', component : Error}
+        {
+            path: '/',
+            component : Index
+        },
+        {
+            path: '/user',
+            component : User
+        },
+        {
+            path: '/login',
+            name: 'login',
+            component : Login,
+            props : true
+        },
+        {
+            path: '/error',
+            component : Error
+        }
     ]
 })
 

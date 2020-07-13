@@ -1,10 +1,10 @@
 <template>
-  <header class="p-2 m-2 bg-primary text-white">
+  <header class="p-2 m-2">
 
       <div class="row">
         
-          <router-link to="/" class="col-1">
-            <h1>Clobs</h1>
+          <router-link to="/" tag="button" class="btn btn-outline-info btn-lg">
+            Clobs
           </router-link>
 
           <div class="col-7">
@@ -14,24 +14,23 @@
 
         <div :key="loged" class="col-4">
 
-          <div class="row">
+          <div>
             <div v-if="loged">
-                <span class="col-6">Welcome, {{username}}</span>
-                <p class="col-6" @click="logout">Logout</p>
+                <span class="m-4">Welcome, {{username}}</span>
+                <p class="btn btn-outline-info" @click="logout">Logout</p>
             </div>
             
             <div v-else>
-                <FormulateForm @submit="login">
+              
+              <router-link :key="$route.params.register" :to="{name: 'login'}" tag="button" class="ml-2 mr-2 btn btn-outline-info">
+                    Login
+              </router-link>
 
-                    <FormulateInput placeholder="username" name="username" class="col-3 m-1"/>
+              or 
 
-                    <FormulateInput type="password" name="password" class="col-3 m-1"/>
-
-                    <FormulateInput type="submit" class="col-2 m-1"/>
-
-                </FormulateForm>
-
-                <span id="loginErrors" class="text-danger">{{loginErrors}}</span>
+              <router-link :key="$route.params.register" :to="{name: 'login', params: {register : true}}" tag="button" class="ml-2 mr-2 btn btn-outline-info">
+                    Register
+              </router-link>
               
             </div>
           </div>
@@ -39,17 +38,24 @@
 
       </div>
 
-      <div class="nav row justify-content-start pl-5">
-        <div class="col-1">
-            <router-link to="/">Explore</router-link>
-        </div>
-        <div class="col-1">
-            <router-link to="/user">My Bookmarks</router-link>
-        </div>
-        <div class="col-1 pl-5">
-            <input type="text" placeholder="Search" >
-        </div>
-      </div>
+      <ul class="nav nav-tabs mt-2">
+        <li class="nav-item">
+            <router-link class="nav-link" to="/">Explore</router-link>
+        </li>
+        <li class="nav-item">
+            <router-link class="nav-link" to="/user">My Bookmarks</router-link>
+        </li>
+        <li class="nav-item">
+            <form class="nav-link form-inline" @submit.prevent="search">
+                <input placeholder="Search" name="search" class="form-control" />
+                <input type="submit" class="btn btn-primary" value="Search"/>
+            </form>
+            <!-- <FormulateForm class="nav-link" @submit="search">
+              <FormulateInput placeholder="Search" name="search" />
+              <FormulateForm type="submit" /> 
+            </FormulateForm> -->
+        </li>
+      </ul>
 
   </header>
 </template>
@@ -67,28 +73,15 @@ export default {
       }
     },
     methods : {
-      login(data) {
-        Auth.login(data.username, data.password, (response, error=false) => {
-          if(!error) {
-            this.loged = true
-            this.loginErrors = ""
-            Auth.loged((response) => {
-              if(response.data != undefined){
-                this.username = response.data.username
-              }
-            })
-          } else {
-            this.loginErrors = response.data.error
-          }
-        })
-      },
-
       logout() {
         Auth.logout(() => {
           this.loged = false
           this.username = null
           this.$forceUpdate()
         })
+      },
+      search(data) {
+        console.log("search: " + data.search)
       }
     },
     mounted : function() {

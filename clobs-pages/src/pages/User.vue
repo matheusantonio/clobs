@@ -1,11 +1,23 @@
 <template>
-    <div>
-        <div v-for="bookmark in bookmarks" :key="bookmark.id">
-            <Bookmark :name="bookmark.definedname" :url="bookmark.url" :isPrivate="bookmark.private" user/>
+    <div class="p-4 shadow border"> 
+        <h2>Your Bookmarks</h2>
+        <div class="list-group list-group-flush">
+            <div v-for="bookmark in bookmarks" :key="bookmark.id" class="list-group-item">
+                
+                <div class="row justify-content-between">
+
+                    <Bookmark class="col" :name="bookmark.definedname" :url="bookmark.url" :isPrivate="bookmark.private" user/>
+
+                    <button class="col-1 btn btn-outline-info mr-2">Edit</button>
+                    <button class="col-1 btn btn-outline-danger">Remove</button>
+                    
+
+                </div>
+            </div>
 
         </div>
-
     </div>
+
 </template>
 
 <script>
@@ -26,7 +38,7 @@ export default {
             if(response.status == 200){
                 this.bookmarks = response.data
             } else {
-                this.$router.push({ path : "/"})
+                this.$router.push({ path : "/login"})
             }
         })
     }

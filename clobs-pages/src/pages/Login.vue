@@ -1,57 +1,96 @@
 <template>
-    <div>
-        <div>
-            <button @click="login">Login with matheus-user and mypass</button>
-            <p id="login"></p>
+    
+    <div class="shadow border">
+
+        {{register}}
+
+        <div class="m-4">
+
+            <form @submit.prevent="submitFunction" method="post">
+
+                <h2>{{label}}</h2>
+
+                <div 
+                    v-if="errors != null"
+                    id="errors"
+                    class="alert alert-danger m-2">
+                    {{errors}}
+                </div>
+
+                <div class="bg-white p-3 container">
+                    
+                    <div class="form-group">
+                        <label>Username</label>
+                        <input name="username" class="form-control" v-model="username"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input name="password" type="password" class="form-control" v-model="password" />
+                    </div>
+
+                    <button type="submit" class="btn btn-info">Send</button>
+                </div>
+
+            </form>
 
         </div>
-        <div>
-            <button @click="logout">Logout :(</button>
-            <p id="logout"></p>
-            
-        </div>
-        <div>
-            <button @click="loged">Am I loged?</button>
-            <p id="loged"></p>
-            
-        </div>
+
     </div>
 </template>
 
 <script>
 
-import Login from "../services/Auth"
+import Auth from "../services/Auth"
 
 export default {
 
+    props : {
+        register : {type : Boolean}
+    },
     data : function() {
         return {
-            loginMessage : null,
-            logoutMessage : null,
-            logedMessage : null
+            errors : null,
+            label : null,
+            username : null,
+            password : null,
+            submitFunction : null
         }
     },
     methods :{
-        login() {
-            Login.login("matheus-user", "mypass", (response) => {
-                document.getElementById('login').innerHTML = response.data
+        loginF() {
+            Auth.login(this.username, this.password, (response, error=false) => {
+            if(!error) {
+                this.errors = ""
+                this.$forceUpdate()
+                this.$router.push({path : "/user"})
+            } else {
+                this.password=null
+                this.errors = response.data.error
+            }
             })
         },
-        logout() {
-            Login.logout((response) => {
-                document.getElementById('logout').innerHTML = response.data
-            })
-        },
-        loged() {
-            Login.loged((response) => {
-                if(response.status == 401){
-                    document.getElementById('loged').innerHTML = "Não autorizado!"
+        registerF(data) {
+            Auth.register(data.username, data.password, (response) => {
+                if(response.status == 201){
+                    this.errors = ""
+                    this.$router.push({ path : "/"})
+                } else {
+                    this.errors = response.data.error
                 }
-                else {
-                    document.getElementById('loged').innerHTML = response.data
-                }
-                
             })
+
+        }
+    },
+    created : function() {
+        this.username=null
+        this.password=null
+        if(!this.register){
+            this.submitFunction = this.loginF
+            this.label = "Login"
+        } else {
+            this.submitFunction = this.registerF
+            this.label = "Register"
         }
     }
 

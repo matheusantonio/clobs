@@ -5,7 +5,8 @@ const urlBase = "http://localhost:3000/clobs"
 export default {
     login: (username, password, callback) => {
         const urlLogin = urlBase + "/auth/login"
-        axios.post(urlLogin, {username:username, password:password}, {withCredentials: true}).then((response) => {
+        axios.post(urlLogin, {username:username, password:password}, {withCredentials: true})
+        .then((response) => {
             callback(response)
         }, (error) => {
             callback(error.response, true)
@@ -27,5 +28,16 @@ export default {
                 callback(error.response, true)
             }
         })
+    },
+
+    register: (username, password, callback) => {
+        const urlRegister = urlBase + "/user/register"
+        axios.post(urlRegister, {username : username, password : password}, {withCredentials: true})
+        .then((response) => {
+            callback(response)
+        }, (error) => {
+            callback(error.response)
+        })
+
     }
 }
