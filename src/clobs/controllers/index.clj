@@ -1,4 +1,4 @@
-(ns clobs.blueprints.index
+(ns clobs.controllers.index
     (:require [clobs.data.bookmarks :as    bookmarks-data]
               [clobs.auth           :refer [ok-status]]))
 

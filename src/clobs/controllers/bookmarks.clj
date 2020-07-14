@@ -1,4 +1,4 @@
-(ns clobs.blueprints.bookmarks
+(ns clobs.controllers.bookmarks
     (:require [clobs.data.bookmarks         :as     bookmarks-data]
               [clobs.data.user_bookmark     :as     user-bm-data]
               [clobs.auth                   :refer  [conflict-status ok-status created-status error-status]]

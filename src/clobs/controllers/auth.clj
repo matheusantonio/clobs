@@ -1,4 +1,4 @@
-(ns clobs.blueprints.auth
+(ns clobs.controllers.auth
     (:require [clobs.data.users                 :as    users-data]
               [clojure.pprint                   :refer [pprint]]
               [clobs.auth                       :refer [conflict-status ok-status unauthorized-status not-acceptable-status created-status]]
