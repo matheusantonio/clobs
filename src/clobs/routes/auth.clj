@@ -1,16 +1,14 @@
 (ns clobs.routes.auth
     (:require [compojure.core           :refer [context GET POST ]]
               [clobs.controllers.auth   :as     auth]
-              [clobs.auth               :refer [ok-status unauthorized-status]]))
+              [clobs.responses          :refer [ok-status unauthorized-status]]
+              [clobs.middleware.request :refer [require-params]]))
 
 (def routes
     (context "/auth" []
       
-        (POST "/login" request
-          (let [session (:session request)
-                username (get-in request [:body :username])
-                password (get-in request [:body :password])]
-            (auth/login username password session)))
+        (POST "/login" [] (-> auth/login
+                              (require-params :username :password)))
         
         (GET "/logout" [] (auth/logout))
 

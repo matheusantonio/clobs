@@ -1,7 +1,7 @@
 (ns clobs.controllers.auth
     (:require [clobs.data.users                 :as    users-data]
               [clojure.pprint                   :refer [pprint]]
-              [clobs.auth                       :refer [conflict-status ok-status unauthorized-status not-acceptable-status created-status]]
+              [clobs.responses                  :refer [conflict-status ok-status unauthorized-status not-acceptable-status created-status]]
               [clobs.data.users                 :refer [password-matches?]]))
 
 
@@ -20,12 +20,24 @@
     
 
 ;; Session management
-(defn login [username password session]
-    (if (password-matches? username password)
-        (let [new-session (assoc session :user-id (retrieve-id username))]
-          (-> (ok-status "Logged in session!")
-              (assoc :session new-session)))
-        (unauthorized-status {:error "Usuário ou senha incorretos"})))
+;(defn login [username password session]
+;    (if (password-matches? username password)
+;        (let [new-session (assoc session :user-id (retrieve-id username))]
+;          (-> (ok-status "Logged in session!")
+;              (assoc :session new-session)))
+;        (unauthorized-status {:error "Usuário ou senha incorretos"})))
+
+
+(defn login [request]
+    (let [session (:session request)
+          username (get-in request [:body :username])
+          password (get-in request [:body :password])]
+        (if (password-matches? username password)
+            (let [new-session (assoc session :user-id (retrieve-id username))]
+            (-> (ok-status "Logged in session!")
+                (assoc :session new-session)))
+            (unauthorized-status {:error "Usuário ou senha incorretos"}))))
+
 
 (defn logout []
     (-> (ok-status "Session deleted")

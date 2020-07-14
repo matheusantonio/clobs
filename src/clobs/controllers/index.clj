@@ -1,6 +1,6 @@
 (ns clobs.controllers.index
-    (:require [clobs.data.bookmarks :as    bookmarks-data]
-              [clobs.auth           :refer [ok-status]]))
+    (:require [clobs.data.bookmarks  :as    bookmarks-data]
+              [clobs.responses       :refer [ok-status]]))
 
 ;; This file will be used to deal with route requests, validate results, etc
 

@@ -3,7 +3,7 @@
         <div class="m-4">
             <div><h2>Top Bookmarks</h2></div>
             <div class="list-group list-group-flush">
-                <div v-for="bookmark in topBookmarks" :key="bookmark.id" class="list-group-item d-flex justify-content-between align-items-center">
+                <div v-for="bookmark in topBookmarks" :key="'top' + bookmark.id" class="list-group-item d-flex justify-content-between align-items-center">
                     <Bookmark :name="bookmark.name" :url="bookmark.url" :quantity="bookmark.qtd" top/>
 
 
@@ -17,7 +17,7 @@
         <div class="m-4">
             <div><h2>Recent Bookmarks</h2></div>
             <div class="list-group list-group-flush">
-                <div v-for="bookmark in recentBookmarks" :key="bookmark.id" class="list-group-item d-flex justify-content-between align-items-center">
+                <div v-for="bookmark in recentBookmarks" :key="bookmark.id + ':' + bookmark.createdat" class="list-group-item d-flex justify-content-between align-items-center">
                     <Bookmark :name="bookmark.name" :url="bookmark.url" :createdAt="bookmark.createdat" recent/>
                 </div>
             </div>

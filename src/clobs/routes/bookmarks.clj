@@ -1,18 +1,27 @@
 (ns clobs.routes.bookmarks
-    (:require [compojure.core               :refer [context GET POST PUT DELETE]]
+    (:require [compojure.core               :refer [context wrap-routes GET POST PUT DELETE]]
               [clobs.controllers.bookmarks  :as     bookmarks]
-              [clobs.auth                   :refer [login-required]]))
+              [clobs.middleware.auth        :refer [require-login]]
+              [clobs.middleware.request     :refer [require-params]]))
+
+
+(def bookmarks-context
+    (context "/bookmarks" []
+        
+        (GET "/"          []   bookmarks/get-all) ;;all user bookmarks
+
+        (GET "/:id"       []   bookmarks/get)     ;;bookmark by id
+
+        (POST "/"         []   (-> bookmarks/insert
+                                   (require-params :url :name :private)))  ;;Create a bookmark
+
+        (PUT "/"          []   (-> bookmarks/update
+                                   (require-params :id :name :private)))  ;;update an existing bookmark
+          
+        (DELETE "/:id"    []   bookmarks/delete)  ;;delete an existing bookmark  
+    ))
 
 
 (def routes
-    (context "/bookmarks" []
-        
-        (GET "/"          request   (login-required request bookmarks/get-all)) ;;all user bookmarks
-        (GET "/:id"       request   (login-required request bookmarks/get))     ;;bookmark by id
-
-        (POST "/"         request   (login-required request bookmarks/insert))  ;;Create a bookmark
-       
-        (PUT "/"          request   (login-required request bookmarks/update))  ;;update an existing bookmark
-          
-        (DELETE "/:id"    request   (login-required request bookmarks/delete))  ;;delete an existing bookmark  
-    ))
+    (-> bookmarks-context
+        (wrap-routes require-login)))

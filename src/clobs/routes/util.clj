@@ -1,6 +1,6 @@
 (ns clobs.routes.util
     (:require [compojure.route   :refer [not-found]]
-              [clobs.auth        :refer [ok-status]]
+              [clobs.responses   :refer [ok-status]]
               [compojure.core    :refer [context POST]]))
 
 

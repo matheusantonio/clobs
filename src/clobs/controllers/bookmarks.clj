@@ -1,7 +1,7 @@
 (ns clobs.controllers.bookmarks
     (:require [clobs.data.bookmarks         :as     bookmarks-data]
               [clobs.data.user_bookmark     :as     user-bm-data]
-              [clobs.auth                   :refer  [conflict-status ok-status created-status error-status]]
+              [clobs.responses              :refer  [conflict-status ok-status created-status error-status]]
               [clojure.pprint               :refer  [pprint]]
               [net.cgrand.enlive-html       :as     html]
               [org.httpkit.client           :as     http]))
