@@ -6,8 +6,6 @@
               [clobs.data.database  :refer [ds]]))
 
 ;; This file will be used for data retrieving
-
-
 (defn get-bookmark
     [id]
     (sql/get-by-id ds :bookmark id))
@@ -28,10 +26,6 @@
 (defn insert
     [url name]
     (sql/insert! ds :bookmark {:url url :name name}))
-
-;(defn update
-;    [url name id]
-;    (sql/update! ds :bookmark {:url url :name name} {:id id}))
 
 (defn delete
     [id]

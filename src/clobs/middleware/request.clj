@@ -1,7 +1,8 @@
 (ns clobs.middleware.request
     (:require [clojure.core.match   :refer [match]]
-              [clobs.responses      :refer [not-acceptable-status not-found-status]]
+              [clobs.responses      :refer [not-acceptable-status error-status not-found-status]]
               [clobs.data.database  :refer [find-by-key]]
+              [clobs.data.user_bookmark     :refer [user-has-bookmark]]
               [clojure.pprint       :refer [pprint]]))
 
 ; Parameters requirement middleware
@@ -43,6 +44,13 @@
     (fn [request]
         ((returns-value? handler request table key) :body)))
 
-; recebo a chave por parametro
-; recupero o valor da chave nos parametros/corpo
-; verifico se existe no banco 
+
+; User owns bookmark
+
+(defn user-owns [handler src]
+    (fn [request]
+        (let [user-id (get-in request [:session :user-id])
+              bookmark-id (get-in request [src :id])]
+            (if (user-has-bookmark user-id bookmark-id)
+                (handler request)
+                (error-status {:error "Bookmark not found for user"})))))

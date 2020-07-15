@@ -7,16 +7,6 @@
     (let [session (:session request)]
         (empty? session)))
 
-;(defn login-required
-;    ([request handler]
-;        (if (not-authenticated? request)
-;            (unauthorized-status {})
-;            (handler request)))
-;    ([request handler & params]
-;        (if (not-authenticated? request)
-;            (unauthorized-status {})
-;            (handler request params))))
-
 ;; Login required middleware test
 (defn require-login [handler]
     (fn [request]

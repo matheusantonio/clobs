@@ -7,14 +7,12 @@
               [net.cgrand.enlive-html       :as     html]
               [org.httpkit.client           :as     http]))
 
-(def not-user-bookmark (error-status {:error "Bookmark not found for user"}))
-
 (defn web-scrap! [url]
     (some-> url
             http/get                ;gets content from url -> SIDE EFFECT!
             deref                   ;dereferences content from url
             html/html-snippet
-            (html/select [:title])    ;selects title tag
+            (html/select [:title])  ;selects title tag
             first                   ;returns the first element of a strucutre with the tags content
             :content                ;get tag content
             first))                 ;get first element from content
@@ -58,9 +56,7 @@
     (let [session (:session request)
           bookmark-id (get-in request [:params :id])
           user-id (:user-id session)]
-        (if (user-bm-data/user-has-bookmark user-id bookmark-id)
-            (ok-status (bookmarks-data/get-bookmark bookmark-id))
-            not-user-bookmark)))
+        (ok-status (bookmarks-data/get-bookmark bookmark-id))))
 
 (defn get-all
     [request]
@@ -73,14 +69,10 @@
           bookmark-id (get-in request [:body :id])
           name        (get-in request [:body :name])
           private     (get-in request [:body :private])]
-        (if (user-bm-data/user-has-bookmark user-id bookmark-id)
-            (user-bm-data/update-user-bookmark user-id bookmark-id name private)
-            not-user-bookmark)))
+        (user-bm-data/update-user-bookmark user-id bookmark-id name private)))
 
 (defn delete
     [request]
     (let [user-id (get-in request [:session :user-id])
           bookmark-id (get-in request [:params :id])]
-        (if (user-bm-data/user-has-bookmark user-id bookmark-id)
-            (user-bm-data/remove-user-bookmark user-id bookmark-id)
-            not-user-bookmark)))
+        (user-bm-data/remove-user-bookmark user-id bookmark-id)))
