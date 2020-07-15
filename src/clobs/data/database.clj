@@ -7,3 +7,7 @@
 
 (def db {:dbtype "mysql" :user "matheus" :password "matheus" :dbname "clobs"})
 (def ds (jdbc/with-options (jdbc/get-datasource db) {:builder-fn rs/as-unqualified-lower-maps}))
+
+(defn find-by-key
+    [t k v]
+    (sql/find-by-keys ds t {k v}))

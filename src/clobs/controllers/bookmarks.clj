@@ -3,20 +3,33 @@
               [clobs.data.user_bookmark     :as     user-bm-data]
               [clobs.responses              :refer  [conflict-status ok-status created-status error-status]]
               [clojure.pprint               :refer  [pprint]]
+              [clojure.string               :refer  [replace]]
               [net.cgrand.enlive-html       :as     html]
               [org.httpkit.client           :as     http]))
 
 (def not-user-bookmark (error-status {:error "Bookmark not found for user"}))
 
+(defn web-scrap! [url]
+    (some-> url
+            http/get                ;gets content from url -> SIDE EFFECT!
+            deref                   ;dereferences content from url
+            html/html-snippet
+            (html/select [:title])    ;selects title tag
+            first                   ;returns the first element of a strucutre with the tags content
+            :content                ;get tag content
+            first))                 ;get first element from content
+
+(defn refine-url [url]
+    (-> url
+        (replace #".*?://" "")
+        (replace #"/.*" "")))
+
 (defn generate-bookmark-name! ;webscraping function
     [url]
-    (as-> url u
-          (http/get u)              ;gets content from url -> SIDE EFFECT!
-          (html/html-snippet @u)    ;dereferences content from url
-          (html/select u [:title])  ;selects title tag
-          (first u)                 ;returns the first element of a strucutre with the tags content
-          (:content u)              ;get tag content
-          (first u)))               ;get first element from content
+    (let [name (web-scrap! url)]
+        (if (nil? name)
+            (refine-url url)
+            name)))
           
     
 (defn create-bookmark

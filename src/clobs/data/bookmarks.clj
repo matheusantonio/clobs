@@ -50,9 +50,10 @@
 
 (defn recent-bookmarks []
     (jdbc/execute! ds
-        [(str "select b.id, b.url, b.name, ub.createdAt "
+        [(str 
+            "select b.id, b.url, b.name, ub.createdAt "
             "from bookmark as b "
                 "inner join userBookmark as ub "
                 "on b.id = ub.bookmarkId "
             "where ub.private = false "
-            "order by ub.createdAt desc;")]))
+            "order by ub.createdAt desc limit 10;")]))
