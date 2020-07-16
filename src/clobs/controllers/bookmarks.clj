@@ -29,7 +29,6 @@
             (refine-url url)
             name)))
           
-    
 (defn create-bookmark
     [url]
     (let [bookmark (bookmarks-data/get-url url)]

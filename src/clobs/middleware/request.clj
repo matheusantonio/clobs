@@ -5,7 +5,6 @@
               [clobs.data.user_bookmark     :refer [user-has-bookmark]]
               [clojure.pprint       :refer [pprint]]))
 
-; Parameters requirement middleware
 (defn body-has-keys?
     [kl request]
     (match kl
@@ -22,8 +21,6 @@
             (handler request)
             (not-acceptable-status {:error "Some parameters are missing"}))))
 
-
-; Existing data middleware
 (defn get-from [src key]
     (fn [request]
         (get-in request [src key])))
@@ -43,9 +40,6 @@
 (defn body-exists [handler table key]
     (fn [request]
         ((returns-value? handler request table key) :body)))
-
-
-; User owns bookmark
 
 (defn user-owns [handler src]
     (fn [request]

@@ -13,6 +13,7 @@ It uses:
 * next-jdbc for database connection
 * MySql as databasey
 * Enlive and http-kit for web scrapping (getting titles by url)
+* Postal form e-mail sending
 * Leiningen for project creation & dependencies management
   
 clobs-pages include a front-end application in Vue to consume this API. It uses Vue-router, Vuex, Bootstrap and Axios.

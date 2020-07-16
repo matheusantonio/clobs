@@ -4,7 +4,6 @@
               [clobs.responses                  :refer [conflict-status ok-status unauthorized-status not-acceptable-status created-status]]
               [clobs.data.users                 :refer [password-matches?]]))
 
-
 ;; User management
 (defn retrieve-id [username]
     (:id (users-data/get-by-username username)))
@@ -12,21 +11,12 @@
 (defn register-user [request]
     (let [username (get-in request [:body :username])
           password (get-in request [:body :password])]
-        (if (or (nil? username) (nil? password))
-            (not-acceptable-status {:error "Username or password not recovered"})
-            (if (users-data/get-by-username username)
-                (conflict-status {:error "User already exists!"})
-                (created-status (users-data/insert username password))))))
-    
+        (if (users-data/get-by-username username)
+            (conflict-status {:error "User already exists!"})
+            (created-status (users-data/insert username password)))))
 
-;; Session management
-;(defn login [username password session]
-;    (if (password-matches? username password)
-;        (let [new-session (assoc session :user-id (retrieve-id username))]
-;          (-> (ok-status "Logged in session!")
-;              (assoc :session new-session)))
-;        (unauthorized-status {:error "Usuário ou senha incorretos"})))
-
+(defn confirm-registration [request]
+    )
 
 (defn login [request]
     (let [session (:session request)
@@ -37,7 +27,6 @@
             (-> (ok-status "Logged in session!")
                 (assoc :session new-session)))
             (unauthorized-status {:error "Usuário ou senha incorretos"}))))
-
 
 (defn logout []
     (-> (ok-status "Session deleted")

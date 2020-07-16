@@ -3,7 +3,6 @@
               [clobs.responses   :refer [ok-status]]
               [compojure.core    :refer [context POST]]))
 
-
 (def routes-debug
     (context "/debug" []
         (POST "/"          request    (ok-status (with-out-str (clojure.pprint/pprint request))))

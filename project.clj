@@ -14,7 +14,8 @@
                  [buddy/buddy-hashers "1.4.0"]
                  [enlive              "1.1.6"]
                  [http-kit "2.1.18"]
-                 [org.clojure/core.match "1.0.0"]]
+                 [org.clojure/core.match "1.0.0"]
+                 [com.draines/postal "2.0.3"]]
   :repl-options {:init-ns clobs.core}
   :profiles {:uberjar {:aot :all}}
   :main clobs.core)

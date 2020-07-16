@@ -4,9 +4,6 @@
               [buddy.hashers :as hashers]
               [clobs.data.database  :refer [ds]]))
 
-;; This file will be used for data retrieving
-
-
 (defn get-user
     [id]
     (sql/get-by-id ds :user id))
@@ -16,7 +13,6 @@
 
 (defn get-by-username
     [username]
-    ;(first (sql/find-by-keys ds :user {:username username})))
     (let [user (sql/find-by-keys ds :user {:username username})]
         (if (> (count user) 0)
             (first user)
@@ -27,7 +23,6 @@
     (let [password-hash (hashers/encrypt password)]
         (sql/insert! ds :user {:username username :password password-hash})))
     
-
 (defn update
     [username password id]
     (sql/update! ds :user {:username username :password password} {:id id}))

@@ -2,8 +2,6 @@
     (:require [clobs.data.bookmarks  :as    bookmarks-data]
               [clobs.responses       :refer [ok-status]]))
 
-;; This file will be used to deal with route requests, validate results, etc
-
 (defn top
     []
     (ok-status (bookmarks-data/top-bookmarks)))

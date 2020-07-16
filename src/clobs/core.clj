@@ -35,7 +35,6 @@
 
     util/route-not-found))
 
-
 (def app
   (-> my-routes
       (session/wrap-session {:store (cookie-store {:key "33 118 164 239 9"})})

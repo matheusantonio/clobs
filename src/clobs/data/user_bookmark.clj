@@ -4,7 +4,6 @@
               [clobs.data.database :refer [ds]]
               [clojure.string           :as str]))
 
-
 (defn get-userbm
     [user-id bookmark-id]
     (first (sql/find-by-keys ds :userBookmark {:userId user-id :bookmarkId bookmark-id})))
@@ -29,7 +28,6 @@
     (seq
         (sql/find-by-keys ds :userBookmark {:bookmarkId  bookmark-id
                                             :userId      user-id})))
-
 
 (defn update-user-bookmark
     [user-id bookmark-id name private]

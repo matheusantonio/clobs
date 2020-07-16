@@ -5,7 +5,6 @@
               [next.jdbc.connection :as connection]
               [clobs.data.database  :refer [ds]]))
 
-;; This file will be used for data retrieving
 (defn get-bookmark
     [id]
     (sql/get-by-id ds :bookmark id))
