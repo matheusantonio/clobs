@@ -7,12 +7,12 @@
             Clobs
           </router-link>
 
-          <div class="col-7">
+          <div class="col-5">
             <h2>Clojure Bookmark Service</h2>
           </div>
         
 
-        <div  class="col-4">
+        <div  class="col-6">
 
           <div>
             <div v-if="this.$store.state.loged">

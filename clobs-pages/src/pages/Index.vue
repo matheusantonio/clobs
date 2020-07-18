@@ -42,16 +42,19 @@ export default {
         }
     },
     components : { Bookmark },
+    methods : {
+        updateIndex() {
+            Index.getTopBookmarks((bookmarks) => {
+                this.topBookmarks = bookmarks.data
+            })
+            Index.getRecentBookmarks((bookmarks) => {
+                this.recentBookmarks = bookmarks.data
+            })
+        }
+    },
     mounted : function() {
 
-        Index.getTopBookmarks((bookmarks) => {
-            this.topBookmarks = bookmarks.data
-        })
-
-        Index.getRecentBookmarks((bookmarks) => {
-            this.recentBookmarks = bookmarks.data
-        })
-        
+        this.updateIndex()
     }
 }
 </script>

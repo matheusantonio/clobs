@@ -2,6 +2,8 @@
   (:require [ring.adapter.jetty               :refer [run-jetty]]
             [clojure.pprint                   :refer [pprint]]
             [ring.middleware.json             :refer [wrap-json-response wrap-json-body]]
+            [ring.middleware.params           :refer [wrap-params]]
+            [ring.middleware.keyword-params   :refer [wrap-keyword-params]]
             [ring.middleware.session          :as     session]
             [ring.middleware.session.cookie   :refer [cookie-store]]
             [ring.middleware.cors             :refer [wrap-cors]]
@@ -40,7 +42,9 @@
       (session/wrap-session {:store (cookie-store {:key "33 118 164 239 9"})})
       (wrap-json-body {:keywords? true}) ; maps json body to clojure map
       wrap-json-response
-      (wrap-cors :access-control-allow-origin [#"http://localhost:8080"]
+      wrap-keyword-params
+      wrap-params
+      (wrap-cors :access-control-allow-origin [#"http://localhost:8080"] ; Vue pages
                  :access-control-allow-methods [:get :put :post :delete]
                  :access-control-allow-headers #{"accept"
                                                  "accept-encoding"

@@ -21,7 +21,7 @@
 (defn insert
     [username password]
     (let [password-hash (hashers/encrypt password)]
-        (sql/insert! ds :user {:username username :password password-hash})))
+        (sql/insert! ds :user {:username username :password password-hash :registered false})))
     
 (defn update
     [username password id]
@@ -37,3 +37,11 @@
             :password
             (->> (hashers/check pass))))
 
+(defn registered?
+    [username]
+    (let [user (get-by-username username)]
+        (:registered user)))
+
+(defn confirm-registration
+    [id]
+    (sql/update! ds :user {:registered true} {:id id}))

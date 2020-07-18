@@ -11,6 +11,12 @@
                     class="alert alert-danger m-2">
                     {{errors}}
                 </div>
+                <div
+                    v-if="messages != null"
+                    id="message"
+                    class="alert alert-info alert-dismissible m-2">
+                    {{messages}}
+                </div>
 
                 <div class="bg-white p-3 container">
                     
@@ -45,6 +51,7 @@ export default {
     data : function() {
         return {
             errors : null,
+            messages : null,
             label : null,
             username : null,
             password : null,
@@ -55,7 +62,8 @@ export default {
         loginF() {
             Auth.login(this.username, this.password, (response) => {
             if(response.status == 200) {
-                this.errors = ""
+                this.errors = null
+                this.messages = null
                 this.$store.commit('login')
                 this.$router.push({path : "/user"})
             } else {
@@ -67,8 +75,10 @@ export default {
         registerF() {
             Auth.register(this.username, this.password, (response) => {
                 if(response.status == 201){
-                    this.errors = ""
-                    this.$router.push({ path : "/"})
+                    this.errors = null
+                    this.username = null
+                    this.password = null
+                    this.messages = response.data.message
                 } else {
                     this.errors = response.data.error
                 }

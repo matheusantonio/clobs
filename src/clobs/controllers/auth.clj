@@ -1,8 +1,8 @@
 (ns clobs.controllers.auth
     (:require [clobs.data.users                 :as    users-data]
               [clojure.pprint                   :refer [pprint]]
-              [clobs.responses                  :refer [conflict-status ok-status unauthorized-status not-acceptable-status created-status]]
-              [clobs.data.users                 :refer [password-matches?]]))
+              [clojure.string                   :as    string]
+              [clobs.responses                  :refer [conflict-status ok-status unauthorized-status created-status]]))
 
 ;; User management
 (defn retrieve-id [username]
@@ -13,16 +13,24 @@
           password (get-in request [:body :password])]
         (if (users-data/get-by-username username)
             (conflict-status {:error "User already exists!"})
-            (created-status (users-data/insert username password)))))
+            (assoc-in
+             (created-status (users-data/insert username password))
+             [:body :message]
+             "Verifique seu e-mail para confirmar seu registro."))))
 
-(defn confirm-registration [request]
-    )
+(defn registration-confirmation [request]
+    (let [hash (string/replace (get-in request [:params :hash]) " " "+")
+          email (get-in request [:params :email])
+          user (users-data/get-by-username email)]
+        (if (or (nil? user) (not= (:password user) hash))
+            (unauthorized-status {})
+            (users-data/confirm-registration (:id user)))))
 
 (defn login [request]
     (let [session (:session request)
           username (get-in request [:body :username])
           password (get-in request [:body :password])]
-        (if (password-matches? username password)
+        (if (and (users-data/password-matches? username password) (users-data/registered? username))
             (let [new-session (assoc session :user-id (retrieve-id username))]
             (-> (ok-status "Logged in session!")
                 (assoc :session new-session)))
