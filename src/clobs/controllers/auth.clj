@@ -24,7 +24,8 @@
           user (users-data/get-by-username email)]
         (if (or (nil? user) (not= (:password user) hash))
             (unauthorized-status {})
-            (users-data/confirm-registration (:id user)))))
+            (do (users-data/confirm-registration (:id user))
+                (ok-status "Registro confirmado com sucesso.")))))
 
 (defn login [request]
     (let [session (:session request)

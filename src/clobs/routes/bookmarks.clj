@@ -9,7 +9,7 @@
         
         (GET "/"        []  bookmarks/get-all) ;;all user bookmarks
 
-        (GET "/:id"     []  (-> bookmarks/get  ;;bookmark by id
+        (GET "/:id"     []  (-> bookmarks/get-one  ;;bookmark by id
                                 (user-owns :params)
                                 (param-exists :bookmark :id)))     
 

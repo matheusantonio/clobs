@@ -4,8 +4,10 @@
 
 (defn top
     []
-    (ok-status (bookmarks-data/top-bookmarks)))
+    (-> (bookmarks-data/top-bookmarks)
+        ok-status))
 
 (defn recent
     []
-    (ok-status (bookmarks-data/recent-bookmarks)))
+    (-> (bookmarks-data/recent-bookmarks)
+        ok-status))

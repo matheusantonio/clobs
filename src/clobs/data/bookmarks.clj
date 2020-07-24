@@ -2,7 +2,6 @@
     (:require [clojure.pprint       :refer [pprint]]
               [next.jdbc            :as jdbc]
               [next.jdbc.sql        :as sql]
-              [next.jdbc.connection :as connection]
               [clobs.data.database  :refer [ds]]))
 
 (defn get-bookmark

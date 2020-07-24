@@ -6,6 +6,7 @@
 ; 200
 (def ok-status (partial response 200))
 (def created-status (partial response 201))
+(def empty-res (response 204 {}))
 
 ; 400
 (def unauthorized-status (partial response 401))

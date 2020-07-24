@@ -1,8 +1,7 @@
 (ns clobs.data.database
     (:require [next.jdbc            :as jdbc]
               [next.jdbc.sql        :as sql]
-              [next.jdbc.result-set :as rs]
-              [next.jdbc.connection :as connection]))
+              [next.jdbc.result-set :as rs]))
 
 
 (def db {:dbtype "mysql" :user "matheus" :password "matheus" :dbname "clobs"})

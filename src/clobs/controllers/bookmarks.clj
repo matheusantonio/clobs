@@ -1,12 +1,13 @@
 (ns clobs.controllers.bookmarks
     (:require [clobs.data.bookmarks         :as     bookmarks-data]
               [clobs.data.user_bookmark     :as     user-bm-data]
-              [clobs.responses              :refer  [conflict-status ok-status created-status]]
+              [clobs.responses              :refer  [conflict-status ok-status created-status empty-res]]
               [clojure.pprint               :refer  [pprint]]
               [clojure.string               :refer  [replace]]
               [net.cgrand.enlive-html       :as     html]
               [org.httpkit.client           :as     http]))
 
+; impure
 (defn web-scrap! [url]
     (some-> url
             http/get                ;gets content from url -> SIDE EFFECT!
@@ -17,19 +18,22 @@
             :content                ;get tag content
             first))                 ;get first element from content
 
+; pure
 (defn refine-url [url]
     (-> url
         (replace #".*?://" "")
         (replace #"/.*" "")))
 
+; impure
 (defn generate-bookmark-name! ;webscraping function
     [url]
     (let [name (web-scrap! url)]
         (if (nil? name)
             (refine-url url)
             name)))
-          
-(defn create-bookmark
+
+; impure
+(defn create-bookmark!
     [url]
     (let [bookmark (bookmarks-data/get-url url)]
         (if bookmark
@@ -38,6 +42,7 @@
                   (bookmarks-data/insert u (generate-bookmark-name! u))
                   (:generated_key u)))))
 
+; impure
 (defn insert
     [request]
     (let [body (:body request)
@@ -45,22 +50,23 @@
           name (:name body)
           private (:private body)
           user-id (get-in request [:session :user-id])
-          bookmark-id (create-bookmark url)]
+          bookmark-id (create-bookmark! url)]
         (if (user-bm-data/get-userbm user-id bookmark-id)
             (conflict-status {:error "Bookmark already registered!"} )
-            (created-status (user-bm-data/insert bookmark-id user-id name private)))))
+            (-> (user-bm-data/insert bookmark-id user-id name private)
+                created-status ))))
 
-(defn get
+(defn get-one
     [request]
-    (let [session (:session request)
-          bookmark-id (get-in request [:params :id])
-          user-id (:user-id session)]
-        (ok-status (bookmarks-data/get-bookmark bookmark-id))))
+    (let [bookmark-id (get-in request [:params :id])
+          bookmark (bookmarks-data/get-bookmark bookmark-id)]
+        (ok-status bookmark)))
 
 (defn get-all
     [request]
-    (let [user-id (get-in request [:session :user-id])]
-        (ok-status (bookmarks-data/get-all user-id))))
+    (let [user-id (get-in request [:session :user-id])
+          bookmarks (bookmarks-data/get-all user-id)]
+        (ok-status bookmarks)))
 
 (defn update
     [request]
@@ -68,10 +74,15 @@
           bookmark-id (get-in request [:body :id])
           name        (get-in request [:body :name])
           private     (get-in request [:body :private])]
-        (user-bm-data/update-user-bookmark user-id bookmark-id name private)))
+        (user-bm-data/update-user-bookmark user-id bookmark-id name private)
+        (ok-status {:user-id user-id
+                    :bookmark-id bookmark-id
+                    :name name
+                    :private private})))
 
 (defn delete
     [request]
     (let [user-id (get-in request [:session :user-id])
           bookmark-id (get-in request [:params :id])]
-        (user-bm-data/remove-user-bookmark user-id bookmark-id)))
+        (user-bm-data/remove-user-bookmark user-id bookmark-id)
+        empty-res))

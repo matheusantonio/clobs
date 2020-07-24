@@ -37,5 +37,5 @@
 (defn remove-user-bookmark
     [user-id bookmark-id]
     (sql/delete! ds :userBookmark {:userId user-id :bookmarkId bookmark-id})
-    (if (empty? (sql/find-by-keys ds :userBookmark {:bookmarkId bookmark-id}))
-        (sql/delete! ds :bookmark {:id bookmark-id})))
+    (when (empty? (sql/find-by-keys ds :userBookmark {:bookmarkId bookmark-id}))
+          (sql/delete! ds :bookmark {:id bookmark-id})))
