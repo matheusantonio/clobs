@@ -1,6 +1,7 @@
 (ns clobs.controllers.bookmarks
     (:require [clobs.data.bookmarks         :as     bookmarks-data]
               [clobs.data.user_bookmark     :as     user-bm-data]
+              [clobs.data.tags_bookmarks    :as     tags-data]
               [clobs.responses              :refer  [conflict-status ok-status created-status empty-res]]
               [clojure.pprint               :refer  [pprint]]
               [clojure.string               :refer  [replace]]
@@ -56,6 +57,10 @@
             (-> (user-bm-data/insert bookmark-id user-id name private)
                 created-status ))))
 
+(defn assoc-tags
+  [bookmark user-id]
+  (assoc bookmark :tags (tags-data/recover-user-tags! (:id bookmark) user-id)))
+
 (defn get-one
     [request]
     (let [bookmark-id (get-in request [:params :id])
@@ -66,7 +71,7 @@
     [request]
     (let [user-id (get-in request [:session :user-id])
           bookmarks (bookmarks-data/get-all user-id)]
-        (ok-status bookmarks)))
+        (ok-status (map #(assoc-tags % user-id) bookmarks))))
 
 (defn update
     [request]

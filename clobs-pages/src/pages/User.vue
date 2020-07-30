@@ -1,4 +1,5 @@
 <template>
+    
     <div :key="bookmarks">
     <div class="p-2 shadow border">
 
@@ -37,6 +38,13 @@
                                 
                             </div>
 
+                        </div>
+
+                        <div class="form-group">
+                            <div>
+                                <label>Tags</label>
+                                <tags-input element-id="newTags"></tags-input>
+                            </div>
                         </div>
 
                         <input type="submit" class="btn btn-outline-info" value="Create">
@@ -78,21 +86,31 @@
 
                     <div class="collapse container" :id="'edit-'+bookmark.id">
                         <div class="border-right border-bottom mt-3 p-2">
-                            <form class="row align-items-center mr-5" @submit.prevent="edit">
-                                <input name="id" type="hidden" :value="bookmark.id" />
-                                <div class="col-4 form-group">
-                                    <label>User defined name</label>
-                                    <input name="definedname" placeholder="Name" class="form-control" :value="bookmark.definedname"/>
+                            <form class="mr-5" @submit.prevent="edit">
+                                <div class="form-row">
+                                    <input name="id" type="hidden" :value="bookmark.id" />
+                                    <div class="col-8 form-group">
+                                        <label>User defined name</label>
+                                        <input name="definedname" placeholder="Name" class="form-control" :value="bookmark.definedname"/>
+                                    </div>
+
+                                    <div class="col-4 form-group">
+                                        <label>Is Private?</label>
+                                        <div class="form-check">
+                                            <input v-if="bookmark.private" name="private" type="checkbox" class="form-check-input" :id="'editIsPrivate'+bookmark.id" checked>
+                                            <input v-else name="private" type="checkbox" class="form-check-input" :id="'editIsPrivate'+bookmark.id">
+                                            <label class="form-check-label" :for="'editIsPrivate'+bookmark.id">Mark if bookmark is private</label>
+                                        </div>
+                                        
+                                    </div>
                                 </div>
 
-                                <div class="col-2 form-group">
-                                    <label class="form-check-label">Is private?</label>
-                                    <input v-if="bookmark.private" name="private" type="checkbox" class="form-control" checked/>
-                                    <input v-else type="checkbox" name="private" class="form-control"/>
-                                    
+                                <div class="form-group">
+                                    <label>Tags</label>
+                                    <tags-input :element-id="'editTags'+bookmark.id"></tags-input>
                                 </div>
 
-                                <div class="col-2">
+                                <div class="form-group">
                                     <input type="submit" class="btn btn-outline-primary">
                                 </div>
                                 
@@ -118,8 +136,10 @@
 
 <script>
 
+
 import Bookmark from '../components/Bookmark'
 import User from '../services/User'
+import VoerroTagsInput from '@voerro/vue-tagsinput';
 
 export default {
 
@@ -140,6 +160,8 @@ export default {
         },
         create(submitElement){
             const data = submitElement.target.elements
+
+            console.log(data["newTags"].value)
 
             User.createBookmark(
                 data["url"].value,
@@ -171,6 +193,8 @@ export default {
 
             const bookmarkId = data["id"].value
 
+            console.log("tags: " + data["editTags"+bookmarkId].value)
+
             User.editBookmark(
                 bookmarkId,
                 data["definedname"].value,
@@ -188,7 +212,7 @@ export default {
             )
         }
     },
-    components : {Bookmark},
+    components : {Bookmark, "tags-input": VoerroTagsInput},
     mounted : function() {
         this.listBookmarks()
         
@@ -196,3 +220,4 @@ export default {
 
 }
 </script>
+

@@ -30,6 +30,9 @@
                 Public
             </p>
         </div>
+        <div v-for="tag in tags" :key="tag">
+            <span class="badge badge-info">{{tag}}</span>
+        </div>
 
     </div>
     
@@ -45,6 +48,7 @@ export default {
         user : {type : Boolean},
         url : {},
         name : {},
+        tags : [],
         createdAt : {},
         isPrivate : {},
         quantity: {}
