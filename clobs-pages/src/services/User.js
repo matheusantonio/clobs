@@ -17,11 +17,12 @@ export default {
             callback(response)
         })
     },
-    createBookmark : (url, name, isPrivate, callback) => {
+    createBookmark : (url, name, isPrivate, tags, callback) => {
         axios.post(urlBase, {
             url : url,
             name : name,
-            private : isPrivate
+            private : isPrivate,
+            tags : tags
         }, {withCredentials : true})
         .then((response) => {
             callback(response)
@@ -35,11 +36,12 @@ export default {
             callback(response)
         })
     },
-    editBookmark : (id, name, isPrivate, callback) => {
+    editBookmark : (id, name, isPrivate, tags, callback) => {
         axios.put(urlBase, {
             id : id,
             name : name,
-            private : isPrivate
+            private : isPrivate,
+            tags : tags
         },
         {withCredentials : true})
         .then((response) => {

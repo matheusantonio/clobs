@@ -11,7 +11,9 @@
                             data-toggle="collapse"
                             data-target="#newBookmark"
                             aria-expanded="false"
-                            aria-controls="newBookmark">New</button>
+                            aria-controls="newBookmark">
+                    New
+                </button>
             </div>
 
             <div class="collapse container" id="newBookmark">
@@ -35,7 +37,6 @@
                                     <input name="private" type="checkbox" class="form-check-input" id="isPrivate">
                                     <label class="form-check-label" for="isPrivate">Mark if bookmark is private</label>
                                 </div>
-                                
                             </div>
 
                         </div>
@@ -63,7 +64,9 @@
                     
                     <div class="row justify-content-between">
 
-                        <Bookmark class="col" :name="bookmark.definedname" :url="bookmark.url" :isPrivate="bookmark.private" user/>
+                        <Bookmark class="col" 
+                            :name="bookmark.definedname" :url="bookmark.url" 
+                            :isPrivate="bookmark.private" :tags=bookmark.tags user/>
 
                         <button 
                             class="col-1 btn btn-outline-info mr-2"
@@ -80,7 +83,6 @@
                             @click="remove(bookmark.id, bookmark.definedname)">
                             Remove
                         </button>
-                        
 
                     </div>
 
@@ -101,13 +103,15 @@
                                             <input v-else name="private" type="checkbox" class="form-check-input" :id="'editIsPrivate'+bookmark.id">
                                             <label class="form-check-label" :for="'editIsPrivate'+bookmark.id">Mark if bookmark is private</label>
                                         </div>
-                                        
                                     </div>
                                 </div>
 
                                 <div class="form-group">
                                     <label>Tags</label>
-                                    <tags-input :element-id="'editTags'+bookmark.id"></tags-input>
+                                    {{editTags.get(bookmarkId)}}
+                                    <tags-input :element-id="'editTags'+bookmark.id" 
+                                        v-model=bookmark.editTags
+                                        placeholder=""></tags-input>
                                 </div>
 
                                 <div class="form-group">
@@ -119,10 +123,7 @@
                                 :id="'errors' + bookmark.id"
                                 class="collapse alert alert-danger">
                             </div>
-
                         </div>
-                    
-
                     </div>
 
                 </div>
@@ -136,7 +137,6 @@
 
 <script>
 
-
 import Bookmark from '../components/Bookmark'
 import User from '../services/User'
 import VoerroTagsInput from '@voerro/vue-tagsinput';
@@ -145,28 +145,43 @@ export default {
 
     data : function() {
         return {
-            bookmarks : []
+            bookmarks : [],
+            editTags : new Map()
         }
     },
     methods: {
         listBookmarks() {
             User.getBookmarks((response) => {
-            if(response.status == 200){
-                this.bookmarks = response.data
-            } else {
-                this.$router.push({ path : "/login"})
-            }
-        })
+                if(response.status == 200){
+                    this.bookmarks = response.data
+                    this.setEditTags()
+                } else {
+                    this.$router.push({ path : "/login" })
+                }
+            })
+        },
+        setEditTags() {
+            this.bookmarks.forEach(bookmark => {
+                bookmark.editTags = bookmark.tags.map(
+                    (tag) => {
+                        return {
+                            key : "",
+                            value : tag
+                        }
+                    }
+                )
+            });
         },
         create(submitElement){
+            
             const data = submitElement.target.elements
-
-            console.log(data["newTags"].value)
-
+            const tags = JSON.parse(data["newTags"].value).map((tag) => tag.value)
+            
             User.createBookmark(
                 data["url"].value,
                 data["name"].value,
                 data["private"].checked,
+                tags,
                 (response) => {
                     if(response.status == 201){
                         this.listBookmarks()
@@ -177,7 +192,6 @@ export default {
                     }
                 }
             )
-
         },
         remove(id, name) {
             if(confirm("Remover " + name + "?")){
@@ -189,16 +203,16 @@ export default {
             }
         },
         edit(submitElement) {
+            
             const data = submitElement.target.elements
-
-            const bookmarkId = data["id"].value
-
-            console.log("tags: " + data["editTags"+bookmarkId].value)
+            const bookmarkId = data["id"].value 
+            const tags = JSON.parse(data["editTags"+bookmarkId].value).map((tag) => tag.value)
 
             User.editBookmark(
                 bookmarkId,
                 data["definedname"].value,
                 data["private"].checked,
+                tags,
                 (response) => {
                     if(response.status == 200) {
                         this.listBookmarks()
@@ -215,9 +229,7 @@ export default {
     components : {Bookmark, "tags-input": VoerroTagsInput},
     mounted : function() {
         this.listBookmarks()
-        
     }
-
 }
-</script>
 
+</script>

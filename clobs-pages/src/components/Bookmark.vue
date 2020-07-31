@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="container">
 
         <div v-if="top">
             <a :href="url">
@@ -30,8 +30,11 @@
                 Public
             </p>
         </div>
-        <div v-for="tag in tags" :key="tag">
-            <span class="badge badge-info">{{tag}}</span>
+        
+        <div class="row ml-2" >
+            <div class="p-1" v-for="tag in tags" :key="tag">
+                <span class="badge badge-primary">{{tag}}</span>
+            </div>
         </div>
 
     </div>
@@ -48,7 +51,7 @@ export default {
         user : {type : Boolean},
         url : {},
         name : {},
-        tags : [],
+        tags : {type: Array},
         createdAt : {},
         isPrivate : {},
         quantity: {}
