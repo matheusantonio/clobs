@@ -5,7 +5,7 @@
             <a :href="url">
                 {{name}}
             </a>
-            <p class="badge badge-info m-1">
+            <p class="badge badge-secondary m-1">
                 {{quantity}}
                 </p>
         </div>
@@ -14,7 +14,7 @@
             <a :href="url">
                 {{name}}
             </a>
-            <p class="badge badge-info m-1">
+            <p class="badge badge-secondary m-1">
                 {{createdAt}}
             </p>
         </div>
@@ -26,14 +26,14 @@
             <p v-if="isPrivate" class="badge badge-info m-1">
                 Private
             </p>
-            <p v-else class="badge badge-info m-1">
+            <p v-else class="badge badge-secondary m-1">
                 Public
             </p>
         </div>
         
         <div class="row ml-2" >
             <div class="p-1" v-for="tag in tags" :key="tag">
-                <span class="badge badge-primary">{{tag}}</span>
+                <span class="badge badge-info">{{tag}}</span>
             </div>
         </div>
 

@@ -5,15 +5,24 @@
 
         <div class="m-4">
             <div class="row justify-content-between mb-2">
-                <h2 class="ml-3">Your Bookmarks</h2>
-                <button 
-                    class="btn btn-outline-success mr-3 "
-                            data-toggle="collapse"
-                            data-target="#newBookmark"
-                            aria-expanded="false"
-                            aria-controls="newBookmark">
-                    New
-                </button>
+                <h2 class="ml-3">
+                    <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-bookmarks" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" d="M7 13l5 3V4a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v12l5-3zm-4 1.234l4-2.4 4 2.4V4a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v10.234z"/>
+                        <path d="M14 14l-1-.6V2a1 1 0 0 0-1-1H4.268A2 2 0 0 1 6 0h6a2 2 0 0 1 2 2v12z"/>
+                    </svg>
+                    Your Bookmarks</h2>
+                <div 
+                    type="button"
+                    class="text-success mr-4"
+                    data-toggle="collapse"
+                    data-target="#newBookmark"
+                    aria-expanded="false"
+                    aria-controls="newBookmark">
+                    <svg width="2em" height="2em" viewBox="0 0 16 16" class="bi bi-bookmark-plus" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" d="M4.5 2a.5.5 0 0 0-.5.5v11.066l4-2.667 4 2.667V8.5a.5.5 0 0 1 1 0v6.934l-5-3.333-5 3.333V2.5A1.5 1.5 0 0 1 4.5 1h4a.5.5 0 0 1 0 1h-4zm9-1a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1H13V1.5a.5.5 0 0 1 .5-.5z"/>
+                        <path fill-rule="evenodd" d="M13 3.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1H14v1.5a.5.5 0 0 1-1 0v-2z"/>
+                    </svg>
+                </div>
             </div>
 
             <div class="collapse container" id="newBookmark">
@@ -68,21 +77,28 @@
                             :name="bookmark.definedname" :url="bookmark.url" 
                             :isPrivate="bookmark.private" :tags=bookmark.tags user/>
 
-                        <button 
-                            class="col-1 btn btn-outline-info mr-2"
+                        <div 
                             type="button"
+                            class="text-info px-2"
                             data-toggle="collapse"
                             v-bind:data-target="'#edit-' + bookmark.id"
                             aria-expanded="false"
                             v-bind:aria-controls="'edit-'+bookmark.id">
-                                Edit
-                        </button>
+                                <svg width="1.5em" height="1.5em" viewBox="0 0 16 16" class="bi bi-pencil-square" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456l-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                                    <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+                                </svg>
+                        </div>
                         
-                        <button 
-                            class="col-1 btn btn-outline-danger"
+                        <div 
+                            type="button"
+                            class="text-danger px-2"
                             @click="remove(bookmark.id, bookmark.definedname)">
-                            Remove
-                        </button>
+                            <svg width="1.5em" height="1.5em" viewBox="0 0 16 16" class="bi bi-trash" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                                <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+                            </svg>
+                        </div>
 
                     </div>
 
@@ -146,7 +162,8 @@ export default {
     data : function() {
         return {
             bookmarks : [],
-            editTags : new Map()
+            editTags : new Map(),
+            timer : ''
         }
     },
     methods: {
@@ -230,6 +247,7 @@ export default {
     mounted : function() {
         this.listBookmarks()
     }
+
 }
 
 </script>

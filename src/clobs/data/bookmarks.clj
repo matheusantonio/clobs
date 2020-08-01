@@ -38,7 +38,7 @@
                 "on ub.bookmarkId = b.id "
             "where ub.private = false "
             "group by ub.bookmarkId "
-            "order by qtd desc limit 10")]))
+            "order by qtd desc, b.id limit 10")]))
 
 (defn recent-bookmarks []
     (jdbc/execute! ds

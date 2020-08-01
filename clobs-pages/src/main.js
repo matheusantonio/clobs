@@ -10,6 +10,7 @@ import Register from './pages/Register'
 import Error from './pages/Error'
 
 import 'bootstrap';
+import 'bootstrap/js/src/util'
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 Vue.use(VueRouter)
