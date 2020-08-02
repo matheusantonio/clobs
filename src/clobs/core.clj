@@ -22,6 +22,7 @@
       ;;home page
       index/top-bookmarks
       index/recent-bookmarks
+      index/search-by-tag
 
       ;;user bookmarks
       bookmarks/routes

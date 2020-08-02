@@ -101,7 +101,10 @@ export default {
         })
       },
       search(data) {
-        console.log("search: " + data.search)
+
+        const tag = data.target.elements["search"].value
+        this.$router.push({ name: 'search', params : { tag : tag }})
+        
       }
     },
     mounted : function() {

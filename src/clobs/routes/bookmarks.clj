@@ -16,7 +16,7 @@
         (POST "/"       []  (-> bookmarks/insert  ;;Create a bookmark
                                 (require-params :url :name :private)))  
 
-        (PUT "/"        []  (-> bookmarks/update  ;;update an existing bookmark
+        (PUT "/"        []  (-> bookmarks/update!  ;;update an existing bookmark
                                 (user-owns :body)
                                 (body-exists :bookmark :id)
                                 (require-params :id :name :private)))  

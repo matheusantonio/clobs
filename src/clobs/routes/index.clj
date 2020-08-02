@@ -7,3 +7,6 @@
 
 (def recent-bookmarks
     (GET "/recent-bookmarks"    []    (index/recent))) ;;last 10 bookmarks added
+
+(def search-by-tag
+    (GET "/search"              []    index/search))

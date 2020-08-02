@@ -7,6 +7,7 @@ import Index from './pages/Index'
 import User from './pages/User'
 import Login from './pages/Login'
 import Register from './pages/Register'
+import Search from './pages/Search'
 import Error from './pages/Error'
 
 import 'bootstrap';
@@ -47,6 +48,12 @@ var router = new VueRouter({
         {
             path : '/register',
             component: Register 
+        },
+        {
+            path : '/search/:tag',
+            name: 'search',
+            component : Search,
+            props : true
         },
         {
             path: '/error',

@@ -11,7 +11,7 @@
 ; impure
 (defn web-scrap! [url]
     (some-> url
-            http/get                ;gets content from url -> SIDE EFFECT!
+            http/get                ;gets content from url
             deref                   ;dereferences content from url
             html/html-snippet
             (html/select [:title])  ;selects title tag
@@ -62,7 +62,7 @@
 
 (defn assoc-tags
   [bookmark user-id]
-  (assoc bookmark :tags (tags-data/recover-user-tags! (:id bookmark) user-id :value)))
+  (assoc bookmark :tags (tags-data/recover-user-tags (:id bookmark) user-id :value)))
 
 (defn get-one
     [request]
@@ -76,7 +76,7 @@
           bookmarks (bookmarks-data/get-all user-id)]
         (ok-status (map #(assoc-tags % user-id) bookmarks))))
 
-(defn update
+(defn update!
     [request]
     (let [user-id     (get-in request [:session :user-id])
           bookmark-id (get-in request [:body :id])

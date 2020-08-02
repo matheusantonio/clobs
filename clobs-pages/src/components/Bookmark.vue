@@ -30,6 +30,12 @@
                 Public
             </p>
         </div>
+
+        <div v-else>
+            <a :href="url" >
+                {{name}}
+            </a>
+        </div>
         
         <div class="row ml-2" >
             <div class="p-1" v-for="tag in tags" :key="tag">

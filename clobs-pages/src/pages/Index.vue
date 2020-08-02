@@ -9,7 +9,7 @@
                 Top Bookmarks</h2></div>
             <div class="list-group list-group-flush">
                 <div v-for="bookmark in topBookmarks" :key="'top' + bookmark.id" class="list-group-item d-flex justify-content-between align-items-center">
-                    <Bookmark :name="bookmark.name" :url="bookmark.url" :quantity="bookmark.qtd" top/>
+                    <Bookmark :name="bookmark.name" :url="bookmark.url" :quantity="bookmark.qtd" :tags="bookmark.tags" top/>
 
 
                 </div>
@@ -29,7 +29,7 @@
                 Recent Bookmarks</h2></div>
             <div class="list-group list-group-flush">
                 <div v-for="bookmark in recentBookmarks" :key="bookmark.id + ':' + bookmark.createdat" class="list-group-item d-flex justify-content-between align-items-center">
-                    <Bookmark :name="bookmark.name" :url="bookmark.url" :createdAt="bookmark.createdat" recent/>
+                    <Bookmark :name="bookmark.name" :url="bookmark.url" :createdAt="bookmark.createdat" :tags="bookmark.tags" recent/>
                 </div>
             </div>
         </div>
@@ -69,7 +69,6 @@ export default {
 
         this.timer = setInterval(function() {
             this.updateIndex()
-            console.log("update")
         }.bind(this), 1000)
     },
     beforeDestroy : function() {

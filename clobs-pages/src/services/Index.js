@@ -14,5 +14,11 @@ export default {
         axios.get(urlRecentBookmarks).then((bookmarks) => {
             callback(bookmarks)
         })
+    },
+    searchByTag : (tag, limit, offset, callback) => {
+        const urlSearch = urlBase + '/search?tag=' + tag + '&limit=' + limit + '&offset=' + offset
+        axios.get(urlSearch).then((bookmarks) => {
+            callback(bookmarks)
+        })
     }
 }
