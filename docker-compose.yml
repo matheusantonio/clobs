@@ -1,0 +1,36 @@
+version: "3.7"
+services:
+  clobs_bd:
+    image: mysql
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_DATABASE: clobs
+      MYSQL_ROOT_PASSWORD: matheus
+      MYSQL_USER: matheus
+      MYSQL_PASSWORD: matheus
+    volumes:
+      - ./script_db.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "3306:3306"
+    container_name: clobs_bd
+
+  backend:
+    image: clobs_api
+    build: .
+    restart: always
+    ports:
+      - "3000:3000"
+    depends_on:
+      - clobs_bd
+    container_name: clobs_api
+
+  frontend:
+    image: clobs_pages
+    build: clobs-pages
+    restart: always
+    ports:
+      - "8080:8080"
+    depends_on:
+      - backend
+    container_name: clobs_pages

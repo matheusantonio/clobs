@@ -9,11 +9,11 @@
                  [ring/ring-json "0.5.0"]
                  [ring-cors "0.1.13"]
                  [seancorfield/next.jdbc "1.1.547"]
-                 [mysql/mysql-connector-java "5.1.18"]
+                 [mysql/mysql-connector-java "5.1.44"]
                  [buddy/buddy-auth "2.2.0"]
                  [buddy/buddy-hashers "1.4.0"]
                  [enlive              "1.1.6"]
-                 [http-kit "2.1.18"]
+                 [http-kit "2.5.3"]
                  [org.clojure/core.match "1.0.0"]
                  [com.draines/postal "2.0.3"]]
   :repl-options {:init-ns clobs.core}

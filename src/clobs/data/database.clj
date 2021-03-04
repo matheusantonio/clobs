@@ -4,7 +4,7 @@
               [next.jdbc.result-set :as rs]))
 
 
-(def db {:dbtype "mysql" :user "matheus" :password "matheus" :dbname "clobs"})
+(def db {:dbtype "mysql" :user "matheus" :password "matheus" :dbname "clobs" :host "clobs_bd" :useSSL "false"}) ;
 (def ds (jdbc/with-options (jdbc/get-datasource db) {:builder-fn rs/as-unqualified-lower-maps}))
 
 (defn find-by-key

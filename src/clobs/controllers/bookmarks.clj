@@ -11,7 +11,7 @@
 ; impure
 (defn web-scrap! [url]
     (some-> url
-            http/get                ;gets content from url
+            http/get {:insecure? true}               ;gets content from url
             deref                   ;dereferences content from url
             html/html-snippet
             (html/select [:title])  ;selects title tag

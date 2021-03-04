@@ -8,7 +8,7 @@
     [id]
     (sql/get-by-id ds :user id))
 
-(def get-all
+(defn get-all []
     (sql/query ds ["select * from user"]))
 
 (defn get-by-username

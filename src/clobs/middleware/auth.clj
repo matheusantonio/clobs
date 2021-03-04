@@ -23,7 +23,7 @@
                    :subject "Clobs Registration"
                    :body (str "Thanks for registering to Clobs application!\n
                             Please, click in the following link:\n
-                            http://localhost:3000/clobs/user/confirm?email=" user-email "&hash=" hash
+                            http://localhost:3001/clobs/user/confirm?email=" user-email "&hash=" hash
                             "\n Clobs API")}))
 
 (defn send-confirmation-email [handler]
