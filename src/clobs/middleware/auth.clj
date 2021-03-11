@@ -33,6 +33,6 @@
               status (:status response)]
             (if (== status 201)
                 (let [hash (:password (get-by-username user-email))]
-                    (send-email user-email hash)
+                    ;(send-email user-email hash) uncomment to enable email sending
                     response)
                 response))))

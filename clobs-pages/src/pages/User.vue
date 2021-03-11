@@ -53,7 +53,7 @@
                         <div class="form-group">
                             <div>
                                 <label>Tags</label>
-                                <tags-input element-id="newTags"></tags-input>
+                                <tags-input element-id="newTags" v-model="newTags"></tags-input>
                             </div>
                         </div>
 
@@ -163,7 +163,8 @@ export default {
         return {
             bookmarks : [],
             editTags : new Map(),
-            timer : ''
+            timer : '',
+            newTags : []
         }
     },
     methods: {
@@ -192,7 +193,7 @@ export default {
         create(submitElement){
             
             const data = submitElement.target.elements
-            const tags = JSON.parse(data["newTags"].value).map((tag) => tag.value)
+            const tags = this.newTags.map((tag) => tag["value"])
             
             User.createBookmark(
                 data["url"].value,

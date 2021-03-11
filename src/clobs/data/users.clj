@@ -21,7 +21,7 @@
 (defn insert
     [username password]
     (let [password-hash (hashers/encrypt password)]
-        (sql/insert! ds :user {:username username :password password-hash :registered false})))
+        (sql/insert! ds :user {:username username :password password-hash :registered true}))) ;; set :registered to false when sending email
     
 (defn update
     [username password id]

@@ -34,9 +34,9 @@ const store = new Vuex.Store({
 var router = new VueRouter({
     routes: [
         {
-            path: '/',
-            component : Index
-        },
+            path: '/', 
+            component : Index,
+        }, 
         {
             path: '/user',
             component : User
@@ -59,6 +59,7 @@ var router = new VueRouter({
             path: '/error',
             component : Error
         }
+        
     ]
 })
 

@@ -12,6 +12,8 @@ COPY package*.json ./
 # instala dependências do projeto
 RUN npm install
 
+RUN npm i @voerro/vue-tagsinput --save
+
 # copia arquivos e pastas para o diretório atual de trabalho (pasta 'app')
 COPY . .
 
