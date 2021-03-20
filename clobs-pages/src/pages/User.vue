@@ -203,6 +203,7 @@ export default {
                 (response) => {
                     if(response.status == 201){
                         this.listBookmarks()
+                        this.newTags = []
                     } else {
                         const errorElement = document.getElementById("errorNew")
                         errorElement.innerHTML = response.error
